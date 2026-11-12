@@ -15,6 +15,7 @@ Im Repo liegen **keine Daten, keine URL und kein Schlüssel**, nur die App-Oberf
 | `manifest.webmanifest`, `icons/` | Name und Icon auf dem Home-Bildschirm | GitHub Pages |
 | `apps-script/Api.gs` | Schnittstelle zum Sheet (Lesen/Schreiben) | Apps Script im Sheet „Ernährungslog“ |
 | `docs/Einrichtung.md` | Ersteinrichtung Schritt für Schritt | – |
+| `docs/APP-STANDARD.md` | Gemeinsamer Design- und Technik-Standard der drei Apps (hell/dunkel, Einstellungen, Versionen) | – |
 
 ## Funktionen (v1)
 
