@@ -46,3 +46,4 @@ Im Repo liegen **keine Daten, keine URL und kein Schlüssel**, nur die App-Oberf
 - **v3** – Chips modular: Basis-Chips plus „+“-Bausteine (Belag, Samstags-Extra, Quark-/Brot-Extras, Abend: Eiweiß · Gemüse · Beilage · Extras). Mengen sind Startwerte und in der Liste änderbar; gleicher Baustein erhöht die Menge. Neue Lebensmittel: Leberwurst, Gouda, Kartoffeln, Putenschnitzel; Scheiben-Einheit für Aufschnitt
 - **v4** – Phase pro Tag per Dropdown im Reiter Eintragen (neue Tage erben die Phase des Vortags); Frühstücks-Chips bereinigt (Lachsschinken raus, Ei und Quark-Bowl zu den Snacks)
 - **v5** – Fitline-Streichkäse entfernt; körniger Frischkäse fettreduziert (0,9 %) als Basis; Buko Balance/India/Ananas als Chips beim Mittag
+- **v6** – Neues Lebensmittel „Brot (Vollkorn/Mischbrot, normal)“ in Brot & Brötchen (Scheibe ≈ 45 g)
