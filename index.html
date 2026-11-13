@@ -290,7 +290,7 @@ details.sec[open] > summary::after{content:"－"}
 
 <script>
 "use strict";
-const APP_VERSION = "v4";
+const APP_VERSION = "v5";
 
 /* ======================================================================
    Stammdaten: Lebensmittel (Werte je 100 g bzw. 100 ml), Vorlagen, Ziele
@@ -305,9 +305,10 @@ const DEFAULT_FOODS = [
   F("aldi_eiweissbrot", "Aldi Eiweißbrot", "Brot & Brötchen", "100 g", 266, 24, 8, 13, [["Scheibe", 35]], [3, "Scheibe"], "Kleine Scheiben à 35 g. Schätzwert, mit Packung abgleichen."),
   F("lieken_eiweissbrot", "Lieken Urkorn / Harry Eiweißbrot", "Brot & Brötchen", "100 g", 243, 23.1, 14, 10.5, [["Scheibe", 42]], [2, "Scheibe"], "2 Scheiben (84 g) ≈ 19,4 g Protein."),
   F("mehrkornbroetchen", "Mehrkornbrötchen (Bäcker)", "Brot & Brötchen", "100 g", 260, 9, 46, 3.5, [["Stück", 70]], [2, "Stück"], "Samstag an Gravel-Tagen."),
-  F("huettenkaese", "Körniger Frischkäse (Hüttenkäse)", "Aufstrich & Belag", "100 g", 98, 13, 2.6, 4.3, [["EL", 30], ["Becher", 200]], [100, "g"]),
-  F("fitline", "Exquisa Fitline 0,2 %", "Aufstrich & Belag", "100 g", 60, 11, 3.5, 0.2, [["EL", 20]], [40, "g"]),
+  F("huettenkaese", "Körniger Frischkäse fettreduziert (Exquisa / Gervais, 0,9 %)", "Aufstrich & Belag", "100 g", 72, 12.5, 2.7, 0.9, [["EL", 30], ["Becher", 200]], [200, "g"], "Schätzwert für 0,9 % Fett, mit Becher abgleichen."),
   F("buko_balance", "Arla Buko Balance", "Aufstrich & Belag", "100 g", 190, 7.8, 4, 16, [], [20, "g"], "Fettfalle – nur hauchdünn als Butterersatz."),
+  F("buko_india", "Arla Buko India", "Aufstrich & Belag", "100 g", 200, 7, 4.5, 17, [], [20, "g"], "Schätzwert, mit Packung abgleichen."),
+  F("buko_ananas", "Arla Buko Ananas", "Aufstrich & Belag", "100 g", 205, 6.5, 6, 17, [], [20, "g"], "Schätzwert, mit Packung abgleichen."),
   F("putenbrust", "Putenbrust-Aufschnitt", "Aufstrich & Belag", "100 g", 105, 22, 1, 1.5, [["Scheibe", 15], ["Packung", 100]], [90, "g"]),
   F("haehnchen_aufschnitt", "Hähnchenbrust-Aufschnitt", "Aufstrich & Belag", "100 g", 100, 21, 1, 1.5, [["Scheibe", 15], ["Packung", 100]], [90, "g"]),
   F("lachsschinken", "Lachsschinken", "Aufstrich & Belag", "100 g", 120, 22, 0.5, 3.5, [["Packung", 80]], [80, "g"]),
@@ -359,13 +360,12 @@ const P = (id, meal, grp, label, items, merge) => ({id, meal, grp, label, items,
 const PRESETS = [
   // Frühstück – Basis
   P("f_pur", "fruehstueck", "base", "2 Eiweißbrötchen", [["eiweissbroetchen", 2, "Stück"]]),
-  P("f_huette", "fruehstueck", "base", "2 Eiweißbrötchen · 200 g körniger Frischkäse", [["eiweissbroetchen", 2, "Stück"], ["huettenkaese", 200, "g"]]),
+  P("f_huette", "fruehstueck", "base", "2 Eiweißbrötchen · 200 g körniger Frischkäse fettreduziert", [["eiweissbroetchen", 2, "Stück"], ["huettenkaese", 200, "g"]]),
   P("f_samstag", "fruehstueck", "base", "Samstag: 2 Mehrkornbrötchen · Butter", [["mehrkornbroetchen", 2, "Stück"], ["butter", 15, "g"]]),
   // Frühstück – Belag
   P("f_schinken", "fruehstueck", "plus", "+ Schinken", [["kochschinken", 1, "Scheibe"]], true),
   P("f_pute", "fruehstueck", "plus", "+ Putenbrust", [["putenbrust", 1, "Scheibe"]], true),
   P("f_haehnchen", "fruehstueck", "plus", "+ Hähnchenbrust", [["haehnchen_aufschnitt", 1, "Scheibe"]], true),
-  P("f_fitline_plus", "fruehstueck", "plus", "+ Fitline-Streichfrischkäse", [["fitline", 40, "g"]], true),
   P("f_huette_plus", "fruehstueck", "plus", "+ körniger Frischkäse 100 g", [["huettenkaese", 100, "g"]], true),
   // Frühstück – Samstags-Extra
   P("f_leberwurst", "fruehstueck", "extra", "+ Leberwurst", [["leberwurst", 1, "Portion"]], true),
@@ -381,10 +381,12 @@ const PRESETS = [
   P("m_nuss", "mittag", "plus", "+ Walnüsse", [["walnuesse", 30, "g"]], true),
   P("m_banane", "mittag", "plus", "+ Banane", [["banane", 1, "Stück"]], true),
   // Mittag – zum Brot
-  P("m_fitline", "mittag", "extra", "+ Fitline", [["fitline", 40, "g"]], true),
+  P("m_buko_bal", "mittag", "extra", "+ Buko Balance", [["buko_balance", 20, "g"]], true),
+  P("m_buko_ind", "mittag", "extra", "+ Buko India", [["buko_india", 20, "g"]], true),
+  P("m_buko_ana", "mittag", "extra", "+ Buko Ananas", [["buko_ananas", 20, "g"]], true),
   P("m_pute", "mittag", "extra", "+ Putenbrust", [["putenbrust", 2, "Scheibe"]], true),
   P("m_schinken", "mittag", "extra", "+ Schinken", [["kochschinken", 2, "Scheibe"]], true),
-  P("m_huette", "mittag", "extra", "+ Hüttenkäse", [["huettenkaese", 50, "g"]], true),
+  P("m_huette", "mittag", "extra", "+ körniger Frischkäse", [["huettenkaese", 50, "g"]], true),
   // Snacks
   P("s_bowl", "snack", "base", "Quark-Bowl · Banane", [["magerquark", 250, "g"], ["haferflocken", 40, "g"], ["banane", 1, "Stück"]]),
   P("s_ei", "snack", "base", "Ei", [["ei", 1, "Stück"]], true),
@@ -1042,9 +1044,9 @@ function renderInfo(){
 
   h += sec("tag", "Mein Tagesplan", `
     <table class="tbl"><tbody>
-      <tr><td><b>Frühstück</b><br><span class="sub">So–Fr</span></td><td>2 Eiweißbrötchen, 200 g Hüttenkäse oder Fitline 0,2 %, Belag (Schinken, Putenbrust, Hähnchenbrust) · ~55–60 g Protein</td></tr>
+      <tr><td><b>Frühstück</b><br><span class="sub">So–Fr</span></td><td>2 Eiweißbrötchen, 200 g körniger Frischkäse (0,9 %), Belag (Schinken, Putenbrust, Hähnchenbrust) · ~55–60 g Protein</td></tr>
       <tr><td><b>Frühstück</b><br><span class="sub">Samstag</span></td><td>2 Mehrkornbrötchen vom Bäcker mit Butter und Aufschnitt, optional 2 Spiegeleier</td></tr>
-      <tr><td><b>Mittag</b></td><td>250 g Magerquark mit Blaubeeren und Süßstoff (im Lean Bulk + 40 g Haferflocken), dazu 3 Scheiben Aldi- oder 2 Scheiben Lieken-Eiweißbrot mit Fitline/Pute · ~60–70 g Protein</td></tr>
+      <tr><td><b>Mittag</b></td><td>250 g Magerquark mit Blaubeeren und Süßstoff (im Lean Bulk + 40 g Haferflocken), dazu 3 Scheiben Aldi- oder 2 Scheiben Lieken-Eiweißbrot mit Buko/Pute · ~60–70 g Protein</td></tr>
       <tr><td><b>Vor dem Training</b></td><td>Banane + 40–50 g Haferflocken, 30–60 Min. vorher</td></tr>
       <tr><td><b>Nach dem Training</b></td><td>Whey-Shake nur, wenn das Abendessen mehr als 2 Std. entfernt ist</td></tr>
       <tr><td><b>Abend</b></td><td>200–250 g Hähnchenbrust, Kabeljau oder Lachs, 400 g Frostergemüse, 1–1,5 EL Öl, Reis roh: Lean Bulk ${RICE.bulk.train} g an Trainingstagen / ${RICE.bulk.rest} g an Ruhetagen</td></tr>
@@ -1104,8 +1106,7 @@ function renderInfo(){
     </tbody></table></div>
     <h3>Aufstriche je 100 g</h3>
     <div class="tblwrap"><table class="tbl"><thead><tr><th>Produkt</th><th class="n">Protein</th><th class="n">Fett</th><th class="n">kcal</th></tr></thead><tbody>
-      <tr><td>Körniger Frischkäse ✓</td><td class="n">13,0</td><td class="n">4,3</td><td class="n">98</td></tr>
-      <tr><td>Exquisa Fitline 0,2 % ✓</td><td class="n">11,0</td><td class="n">0,2</td><td class="n">60</td></tr>
+      <tr><td>Körniger Frischkäse 0,9 % ✓</td><td class="n">12,5</td><td class="n">0,9</td><td class="n">72</td></tr>
       <tr><td>Buko Balance (nur hauchdünn)</td><td class="n">7,8</td><td class="n">16,0</td><td class="n">190</td></tr>
       <tr><td>Buko „Der Sahnige“ ✗</td><td class="n">4,5</td><td class="n">25,1</td><td class="n">258</td></tr>
     </tbody></table></div>
