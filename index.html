@@ -74,8 +74,8 @@ header.bar{position:sticky;top:0;z-index:5;background:var(--bg);padding-top:calc
 .seg{display:flex;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:2px}
 .seg button{border:0;background:transparent;border-radius:6px;padding:6px 10px;font-size:13px;color:var(--muted);font-weight:500;min-height:34px}
 .seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
-.dayopts .phase{font-size:12px;color:var(--muted)}
-.dayopts .phase b{color:var(--ink);font-weight:600}
+.dayopts .phase{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.dayopts .phase select{font-size:16px;font-weight:600;color:var(--ink);background:var(--input);border:1px solid var(--line);border-radius:8px;padding:6px 8px;min-height:38px}
 
 /* Tagessumme */
 .totals{position:sticky;top:var(--hdr,118px);z-index:4;background:var(--bg);padding:10px 0 8px;margin-top:6px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;border-bottom:1px solid var(--line)}
@@ -290,7 +290,7 @@ details.sec[open] > summary::after{content:"－"}
 
 <script>
 "use strict";
-const APP_VERSION = "v3";
+const APP_VERSION = "v4";
 
 /* ======================================================================
    Stammdaten: Lebensmittel (Werte je 100 g bzw. 100 ml), Vorlagen, Ziele
@@ -358,17 +358,15 @@ const GROUPS = {
 const P = (id, meal, grp, label, items, merge) => ({id, meal, grp, label, items, merge: !!merge});
 const PRESETS = [
   // Frühstück – Basis
-  P("f_huette", "fruehstueck", "base", "2 Eiweißbrötchen · 200 g Hüttenkäse", [["eiweissbroetchen", 2, "Stück"], ["huettenkaese", 200, "g"]]),
-  P("f_fitline", "fruehstueck", "base", "2 Eiweißbrötchen · Fitline", [["eiweissbroetchen", 2, "Stück"], ["fitline", 40, "g"]]),
+  P("f_pur", "fruehstueck", "base", "2 Eiweißbrötchen", [["eiweissbroetchen", 2, "Stück"]]),
+  P("f_huette", "fruehstueck", "base", "2 Eiweißbrötchen · 200 g körniger Frischkäse", [["eiweissbroetchen", 2, "Stück"], ["huettenkaese", 200, "g"]]),
   P("f_samstag", "fruehstueck", "base", "Samstag: 2 Mehrkornbrötchen · Butter", [["mehrkornbroetchen", 2, "Stück"], ["butter", 15, "g"]]),
-  P("f_bowl", "fruehstueck", "base", "Quark-Bowl · Banane", [["magerquark", 250, "g"], ["haferflocken", 40, "g"], ["banane", 1, "Stück"]]),
   // Frühstück – Belag
   P("f_schinken", "fruehstueck", "plus", "+ Schinken", [["kochschinken", 1, "Scheibe"]], true),
   P("f_pute", "fruehstueck", "plus", "+ Putenbrust", [["putenbrust", 1, "Scheibe"]], true),
   P("f_haehnchen", "fruehstueck", "plus", "+ Hähnchenbrust", [["haehnchen_aufschnitt", 1, "Scheibe"]], true),
-  P("f_lachsschinken", "fruehstueck", "plus", "+ Lachsschinken", [["lachsschinken", 40, "g"]], true),
-  P("f_fitline_plus", "fruehstueck", "plus", "+ Fitline", [["fitline", 40, "g"]], true),
-  P("f_ei", "fruehstueck", "plus", "+ Ei", [["ei", 1, "Stück"]], true),
+  P("f_fitline_plus", "fruehstueck", "plus", "+ Fitline-Streichfrischkäse", [["fitline", 40, "g"]], true),
+  P("f_huette_plus", "fruehstueck", "plus", "+ körniger Frischkäse 100 g", [["huettenkaese", 100, "g"]], true),
   // Frühstück – Samstags-Extra
   P("f_leberwurst", "fruehstueck", "extra", "+ Leberwurst", [["leberwurst", 1, "Portion"]], true),
   P("f_gouda", "fruehstueck", "extra", "+ Gouda", [["gouda", 1, "Scheibe"]], true),
@@ -388,6 +386,8 @@ const PRESETS = [
   P("m_schinken", "mittag", "extra", "+ Schinken", [["kochschinken", 2, "Scheibe"]], true),
   P("m_huette", "mittag", "extra", "+ Hüttenkäse", [["huettenkaese", 50, "g"]], true),
   // Snacks
+  P("s_bowl", "snack", "base", "Quark-Bowl · Banane", [["magerquark", 250, "g"], ["haferflocken", 40, "g"], ["banane", 1, "Stück"]]),
+  P("s_ei", "snack", "base", "Ei", [["ei", 1, "Stück"]], true),
   P("s_pre", "snack", "base", "Pre-Workout: Banane · Hafer", [["banane", 1, "Stück"], ["haferflocken", 40, "g"], ["milch15", 150, "ml"]]),
   P("s_shake", "snack", "base", "Whey-Shake mit Milch", [["whey", 1, "Scoop"], ["milch15", 300, "ml"]]),
   P("s_banane", "snack", "base", "Banane", [["banane", 1, "Stück"]]),
@@ -490,7 +490,12 @@ function macrosFor(f, qty, unit){
 
 /* ---------- Tage & Ziele ---------- */
 function defaultType(iso){ const d = new Date(isoMs(iso)).getDay(); return d === 1 || d === 3 || d === 5 ? "train" : d === 6 ? "gravel" : "rest"; }
-function dayInfo(iso){ const d = days[iso] || {}; return {type: d.type || defaultType(iso), phase: d.phase || defaultPhase, note: d.note || "", stored: !!days[iso]}; }
+function inheritedPhase(iso){ // Phase des letzten davor gespeicherten Tages, sonst Standardphase
+  let best = null;
+  for(const k in days) if(k < iso && days[k].phase && (!best || k > best)) best = k;
+  return best ? days[best].phase : defaultPhase;
+}
+function dayInfo(iso){ const d = days[iso] || {}; return {type: d.type || defaultType(iso), phase: d.phase || inheritedPhase(iso), note: d.note || "", stored: !!days[iso]}; }
 function targetFor(iso){ const d = dayInfo(iso); return TARGETS[d.phase][d.type]; }
 function dayEntries(iso){ return Object.values(entries).filter(e => e.date === iso).sort((a, b) => (a.ts || 0) - (b.ts || 0)); }
 function sumOf(list){ return list.reduce((s, e) => ({kcal: s.kcal + (e.kcal||0), p: s.p + (e.p||0), c: s.c + (e.c||0), f: s.f + (e.f||0)}), {kcal: 0, p: 0, c: 0, f: 0}); }
@@ -676,7 +681,7 @@ function renderEntry(){
     </div>
     <div class="dayopts">
       <div class="seg" role="group" aria-label="Tagestyp">${TYPES.map(([k, l]) => `<button type="button" data-type="${k}" aria-pressed="${di.type === k}">${l}</button>`).join("")}</div>
-      <span class="phase">Phase: <b>${PHASE_NAME[di.phase]}</b></span>
+      <label class="phase">Phase <select id="dPhase" aria-label="Phase für diesen Tag">${PHASES.map(([k, l]) => `<option value="${k}"${k === di.phase ? " selected" : ""}>${l}</option>`).join("")}</select></label>
     </div>
     <div class="totals">
       ${meterHTML("kcal", tot.kcal, tg.kcal, "")}
@@ -779,6 +784,12 @@ function setType(type){
   const d = dayInfo(curDate);
   queue({t: "day", date: curDate, type, phase: d.phase, note: d.note});
   renderEntry();
+}
+function setPhase(phase, iso){
+  iso = iso || curDate;
+  const d = dayInfo(iso);
+  queue({t: "day", date: iso, type: d.type, phase, note: d.note});
+  if(iso >= todayISO()){ defaultPhase = phase; LS.set("phase", phase); }
 }
 function setNote(note){
   const d = dayInfo(curDate);
@@ -1014,14 +1025,14 @@ function niceTicks(max){
    Reiter 3: Info
    ====================================================================== */
 function renderInfo(){
-  const ph = defaultPhase;
+  const ph = dayInfo(todayISO()).phase;
   const tgt = TARGETS[ph];
   const open = LS.get("infoOpen", {});
   const sec = (id, title, body) => `<details class="sec" data-sec="${id}"${open[id] ? " open" : ""}><summary>${title}</summary><div class="sec-body">${body}</div></details>`;
   let h = `<div class="info">`;
 
   h += sec("ziele", "Tagesziele & Phase", `
-    <div class="form"><label>Aktuelle Phase (gilt für neue Tage)<select id="phaseSel">${PHASES.map(([k, l]) => `<option value="${k}"${k === ph ? " selected" : ""}>${l}</option>`).join("")}</select></label></div>
+    <div class="form"><label>Phase heute (gilt auch für die folgenden Tage)<select id="phaseSel">${PHASES.map(([k, l]) => `<option value="${k}"${k === ph ? " selected" : ""}>${l}</option>`).join("")}</select></label></div>
     <div class="tblwrap"><table class="tbl"><thead><tr><th>Tag</th><th class="n">kcal</th><th class="n">Protein</th><th class="n">KH</th><th class="n">Fett</th></tr></thead><tbody>
       ${TYPES.map(([k]) => { const t = tgt[k]; return `<tr><td>${TYPE_LONG[k]}</td><td class="n">${de(t.kcal[0])}–${de(t.kcal[1])}</td><td class="n">${t.p[0]}–${t.p[1]}</td><td class="n">${t.c[0]}–${t.c[1]}</td><td class="n">${t.f[0]}–${t.f[1]}</td></tr>`; }).join("")}
     </tbody></table></div>
@@ -1188,7 +1199,8 @@ document.addEventListener("change", ev => {
   if(t.dataset.qty) changeQty(t.dataset.qty, t.value);
   else if(t.id === "dDate" || t.id === "aDate") gotoDate(t.value);
   else if(t.id === "dNote") setNote(t.value.trim());
-  else if(t.id === "phaseSel"){ defaultPhase = t.value; LS.set("phase", defaultPhase); renderInfo(); toast("Phase: " + PHASE_NAME[defaultPhase]); }
+  else if(t.id === "dPhase"){ setPhase(t.value); renderEntry(); toast("Phase: " + PHASE_NAME[t.value]); }
+  else if(t.id === "phaseSel"){ setPhase(t.value, todayISO()); renderInfo(); toast("Phase heute: " + PHASE_NAME[t.value]); }
   else if(t.id === "rFrom" || t.id === "rTo"){ anaFrom = $("rFrom").value; anaTo = $("rTo").value; renderAna(); }
 });
 document.addEventListener("keydown", ev => { if(ev.key === "Enter" && ev.target.dataset && ev.target.dataset.qty) ev.target.blur(); });
