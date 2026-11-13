@@ -101,6 +101,10 @@ header.bar{position:sticky;top:0;z-index:5;background:var(--bg);padding-top:calc
 .chips::-webkit-scrollbar{display:none}
 .chipbtn{flex:none;border:1px solid var(--line);background:var(--input);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:500;white-space:nowrap;min-height:36px}
 .chipbtn.last{border-style:dashed;color:var(--muted)}
+.chips.wrap{flex-wrap:wrap;overflow:visible}
+.chipgrp{margin-bottom:8px}
+.chipgrp .gl{display:block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:2px 2px 5px}
+.chipbtn.plus{background:var(--accent-soft);border-color:transparent;color:var(--ink)}
 .chipbtn:active{background:var(--accent-soft)}
 .items{display:grid;gap:0}
 .item{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:4px 8px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
@@ -286,7 +290,7 @@ details.sec[open] > summary::after{content:"－"}
 
 <script>
 "use strict";
-const APP_VERSION = "v2";
+const APP_VERSION = "v3";
 
 /* ======================================================================
    Stammdaten: Lebensmittel (Werte je 100 g bzw. 100 ml), Vorlagen, Ziele
@@ -304,10 +308,12 @@ const DEFAULT_FOODS = [
   F("huettenkaese", "Körniger Frischkäse (Hüttenkäse)", "Aufstrich & Belag", "100 g", 98, 13, 2.6, 4.3, [["EL", 30], ["Becher", 200]], [100, "g"]),
   F("fitline", "Exquisa Fitline 0,2 %", "Aufstrich & Belag", "100 g", 60, 11, 3.5, 0.2, [["EL", 20]], [40, "g"]),
   F("buko_balance", "Arla Buko Balance", "Aufstrich & Belag", "100 g", 190, 7.8, 4, 16, [], [20, "g"], "Fettfalle – nur hauchdünn als Butterersatz."),
-  F("putenbrust", "Putenbrust-Aufschnitt", "Aufstrich & Belag", "100 g", 105, 22, 1, 1.5, [["Packung", 100]], [90, "g"]),
-  F("haehnchen_aufschnitt", "Hähnchenbrust-Aufschnitt", "Aufstrich & Belag", "100 g", 100, 21, 1, 1.5, [["Packung", 100]], [90, "g"]),
+  F("putenbrust", "Putenbrust-Aufschnitt", "Aufstrich & Belag", "100 g", 105, 22, 1, 1.5, [["Scheibe", 15], ["Packung", 100]], [90, "g"]),
+  F("haehnchen_aufschnitt", "Hähnchenbrust-Aufschnitt", "Aufstrich & Belag", "100 g", 100, 21, 1, 1.5, [["Scheibe", 15], ["Packung", 100]], [90, "g"]),
   F("lachsschinken", "Lachsschinken", "Aufstrich & Belag", "100 g", 120, 22, 0.5, 3.5, [["Packung", 80]], [80, "g"]),
-  F("kochschinken", "Kochschinken", "Aufstrich & Belag", "100 g", 110, 20, 1, 3, [["Packung", 100]], [80, "g"]),
+  F("kochschinken", "Kochschinken / Schinken Cotto", "Aufstrich & Belag", "100 g", 110, 20, 1, 3, [["Scheibe", 20], ["Packung", 100]], [80, "g"], "Scheibe ≈ 20 g (Schätzwert)."),
+  F("leberwurst", "Leberwurst", "Aufstrich & Belag", "100 g", 330, 13, 1, 30, [["Portion", 25]], [1, "Portion"], "Samstags-Extra. Portion ≈ 25 g, Schätzwert."),
+  F("gouda", "Gouda", "Aufstrich & Belag", "100 g", 356, 25, 0, 27, [["Scheibe", 25]], [1, "Scheibe"], "Samstags-Extra. Scheibe ≈ 25 g."),
   F("ei", "Ei (Gr. M)", "Aufstrich & Belag", "100 g", 137, 12.5, 0.6, 9.5, [["Stück", 60]], [2, "Stück"]),
   F("gurke", "Gurke / Tomate", "Aufstrich & Belag", "100 g", 16, 0.7, 2.4, 0.2, [], [80, "g"]),
   F("butter", "Butter", "Fette", "100 g", 741, 0.7, 0.6, 82, [["TL", 5]], [15, "g"]),
@@ -323,12 +329,14 @@ const DEFAULT_FOODS = [
   F("mandeln", "Mandeln", "Obst, Nüsse & Getreide", "100 g", 600, 21, 6, 52, [["Handvoll", 25]], [30, "g"]),
   F("haehnchenbrust", "Hähnchenbrust (roh)", "Fleisch & Fisch", "100 g", 110, 23.5, 0, 1.5, [], [250, "g"]),
   F("haehnchen_innenfilet", "Hähncheninnenfilet (roh)", "Fleisch & Fisch", "100 g", 105, 23, 0, 1.2, [], [250, "g"]),
+  F("putenschnitzel", "Putenschnitzel (roh)", "Fleisch & Fisch", "100 g", 105, 23.5, 0, 1, [], [250, "g"]),
   F("kabeljau", "Kabeljaufilet (roh)", "Fleisch & Fisch", "100 g", 77, 18, 0, 0.6, [], [250, "g"]),
   F("lachs", "Lachsfilet (roh)", "Fleisch & Fisch", "100 g", 200, 20, 0, 13, [["Filet", 125]], [250, "g"]),
   F("frostergemuese", "Frostergemüse (ohne Sauce)", "Beilagen & Gemüse", "100 g", 35, 2, 5, 0.3, [["Beutel", 450]], [400, "g"]),
   F("reis", "Basmati-Vollkornreis (roh)", "Beilagen & Gemüse", "100 g", 350, 8, 74, 2.5, [], [80, "g"], "Rohgewicht."),
   F("nudeln", "Vollkornnudeln (roh)", "Beilagen & Gemüse", "100 g", 350, 13, 64, 2.5, [], [100, "g"], "Rohgewicht."),
   F("suesskartoffel", "Süßkartoffel", "Beilagen & Gemüse", "100 g", 86, 1.6, 20, 0.1, [], [250, "g"]),
+  F("kartoffeln", "Kartoffeln (roh)", "Beilagen & Gemüse", "100 g", 77, 2, 17, 0.1, [], [300, "g"], "Rohgewicht. 300 g ≈ 70 g Reis (roh)."),
   F("olivenoel", "Olivenöl", "Fette", "100 g", 884, 0, 0, 100, [["EL", 10], ["TL", 4.5]], [1, "EL"]),
   F("weisswein", "Weißwein trocken", "Getränke", "100 ml", 72, 0.1, 0.6, 0, [["Glas 0,2 l", 200], ["Flasche", 750]], [1, "Glas 0,2 l"], "Alkohol: Proteinsynthese bis −37 %, Schlaf leidet."),
   F("bier", "Bier (Pils)", "Getränke", "100 ml", 42, 0.5, 3, 0, [["Flasche 0,33 l", 330], ["0,5 l", 500]], [1, "0,5 l"]),
@@ -339,27 +347,67 @@ const DEFAULT_FOODS = [
 const RICE = {bulk: {train: 130, gravel: 130, rest: 80}, erhaltung: {train: 80, gravel: 80, rest: 50}, diaet: {train: 50, gravel: 50, rest: 0}};
 const MEALS = [["fruehstueck", "Frühstück"], ["mittag", "Mittag"], ["snack", "Snacks & Getränke"], ["abend", "Abend"]];
 const MEAL_NAME = Object.fromEntries(MEALS);
-const P = (id, meal, label, items) => ({id, meal, label, items});
+// Gruppen je Mahlzeit: "Basis" = Grundmahlzeit (mehrere Zutaten), "+" = einzelne Bausteine.
+// Menge steht nur als Startwert da und lässt sich in der Liste ändern. merge: gleicher Baustein erhöht die vorhandene Menge.
+const GROUPS = {
+  fruehstueck: [["base", "Basis"], ["plus", "+ Belag"], ["extra", "+ Samstags-Extra"]],
+  mittag: [["base", "Basis"], ["plus", "+ zum Quark"], ["extra", "+ zum Brot"]],
+  snack: [["base", ""]],
+  abend: [["prot", "Eiweiß"], ["gem", "Gemüse"], ["beil", "Beilage"], ["extra", "Extras"], ["base", "Schnell"]]
+};
+const P = (id, meal, grp, label, items, merge) => ({id, meal, grp, label, items, merge: !!merge});
 const PRESETS = [
-  P("f_huette", "fruehstueck", "2 Eiweißbrötchen · Hüttenkäse · Pute", [["eiweissbroetchen", 2, "Stück"], ["huettenkaese", 100, "g"], ["putenbrust", 90, "g"]]),
-  P("f_fitline", "fruehstueck", "2 Eiweißbrötchen · Fitline · Lachsschinken", [["eiweissbroetchen", 2, "Stück"], ["fitline", 40, "g"], ["lachsschinken", 80, "g"]]),
-  P("f_samstag", "fruehstueck", "Samstag: Mehrkornbrötchen · Butter", [["mehrkornbroetchen", 2, "Stück"], ["butter", 15, "g"], ["kochschinken", 80, "g"]]),
-  P("f_bowl", "fruehstueck", "Quark-Bowl · Banane", [["magerquark", 250, "g"], ["haferflocken", 40, "g"], ["banane", 1, "Stück"]]),
-  P("m_aldi", "mittag", "Quark · 3 Aldi-Eiweißbrot", [["magerquark", 250, "g"], ["blaubeeren", 100, "g"], ["aldi_eiweissbrot", 3, "Scheibe"], ["fitline", 40, "g"], ["putenbrust", 60, "g"]]),
-  P("m_lieken", "mittag", "Quark · 2 Lieken-Eiweißbrot", [["magerquark", 250, "g"], ["blaubeeren", 100, "g"], ["lieken_eiweissbrot", 2, "Scheibe"], ["fitline", 40, "g"], ["putenbrust", 60, "g"]]),
-  P("m_hafer", "mittag", "+ Haferflocken in den Quark", [["haferflocken", 40, "g"]]),
-  P("s_pre", "snack", "Pre-Workout: Banane · Hafer", [["banane", 1, "Stück"], ["haferflocken", 40, "g"], ["milch15", 150, "ml"]]),
-  P("s_shake", "snack", "Whey-Shake mit Milch", [["whey", 1, "Scoop"], ["milch15", 300, "ml"]]),
-  P("s_banane", "snack", "Banane", [["banane", 1, "Stück"]]),
-  P("s_nuss", "snack", "Walnüsse 30 g", [["walnuesse", 30, "g"]]),
-  P("s_quark", "snack", "Late-Night-Quark 150 g", [["magerquark", 150, "g"]]),
-  P("s_hepa", "snack", "Hepafast-Shake", [["hepafast", 1, "Portion"]]),
-  P("s_cola", "snack", "Cola Zero 0,5 l", [["colazero", 500, "ml"]]),
-  P("s_wein", "snack", "Weißwein 1 Glas", [["weisswein", 1, "Glas 0,2 l"]]),
-  P("a_haehnchen", "abend", "Hähnchenbrust · Gemüse · Reis", [["haehnchenbrust", 250, "g"], ["frostergemuese", 400, "g"], ["olivenoel", 1, "EL"], ["reis", "rice", "g"]]),
-  P("a_kabeljau", "abend", "Kabeljau · Gemüse · Reis", [["kabeljau", 250, "g"], ["frostergemuese", 400, "g"], ["olivenoel", 1, "EL"], ["reis", "rice", "g"]]),
-  P("a_lachs", "abend", "Lachs · Gemüse · Reis", [["lachs", 250, "g"], ["frostergemuese", 400, "g"], ["olivenoel", 1, "TL"], ["reis", "rice", "g"]]),
-  P("a_hepa", "abend", "Ruhetag schnell: Gemüse · Hepafast", [["frostergemuese", 400, "g"], ["olivenoel", 1, "EL"], ["hepafast", 1, "Portion"]])
+  // Frühstück – Basis
+  P("f_huette", "fruehstueck", "base", "2 Eiweißbrötchen · 200 g Hüttenkäse", [["eiweissbroetchen", 2, "Stück"], ["huettenkaese", 200, "g"]]),
+  P("f_fitline", "fruehstueck", "base", "2 Eiweißbrötchen · Fitline", [["eiweissbroetchen", 2, "Stück"], ["fitline", 40, "g"]]),
+  P("f_samstag", "fruehstueck", "base", "Samstag: 2 Mehrkornbrötchen · Butter", [["mehrkornbroetchen", 2, "Stück"], ["butter", 15, "g"]]),
+  P("f_bowl", "fruehstueck", "base", "Quark-Bowl · Banane", [["magerquark", 250, "g"], ["haferflocken", 40, "g"], ["banane", 1, "Stück"]]),
+  // Frühstück – Belag
+  P("f_schinken", "fruehstueck", "plus", "+ Schinken", [["kochschinken", 1, "Scheibe"]], true),
+  P("f_pute", "fruehstueck", "plus", "+ Putenbrust", [["putenbrust", 1, "Scheibe"]], true),
+  P("f_haehnchen", "fruehstueck", "plus", "+ Hähnchenbrust", [["haehnchen_aufschnitt", 1, "Scheibe"]], true),
+  P("f_lachsschinken", "fruehstueck", "plus", "+ Lachsschinken", [["lachsschinken", 40, "g"]], true),
+  P("f_fitline_plus", "fruehstueck", "plus", "+ Fitline", [["fitline", 40, "g"]], true),
+  P("f_ei", "fruehstueck", "plus", "+ Ei", [["ei", 1, "Stück"]], true),
+  // Frühstück – Samstags-Extra
+  P("f_leberwurst", "fruehstueck", "extra", "+ Leberwurst", [["leberwurst", 1, "Portion"]], true),
+  P("f_gouda", "fruehstueck", "extra", "+ Gouda", [["gouda", 1, "Scheibe"]], true),
+  P("f_butter", "fruehstueck", "extra", "+ Butter", [["butter", 10, "g"]], true),
+  // Mittag – Basis
+  P("m_quark", "mittag", "base", "Magerquark 250 g", [["magerquark", 250, "g"]]),
+  P("m_aldi", "mittag", "base", "3 Aldi-Eiweißbrot", [["aldi_eiweissbrot", 3, "Scheibe"]]),
+  P("m_lieken", "mittag", "base", "2 Lieken-Eiweißbrot", [["lieken_eiweissbrot", 2, "Scheibe"]]),
+  // Mittag – zum Quark
+  P("m_blau", "mittag", "plus", "+ Blaubeeren", [["blaubeeren", 100, "g"]], true),
+  P("m_hafer", "mittag", "plus", "+ Haferflocken", [["haferflocken", 40, "g"]], true),
+  P("m_nuss", "mittag", "plus", "+ Walnüsse", [["walnuesse", 30, "g"]], true),
+  P("m_banane", "mittag", "plus", "+ Banane", [["banane", 1, "Stück"]], true),
+  // Mittag – zum Brot
+  P("m_fitline", "mittag", "extra", "+ Fitline", [["fitline", 40, "g"]], true),
+  P("m_pute", "mittag", "extra", "+ Putenbrust", [["putenbrust", 2, "Scheibe"]], true),
+  P("m_schinken", "mittag", "extra", "+ Schinken", [["kochschinken", 2, "Scheibe"]], true),
+  P("m_huette", "mittag", "extra", "+ Hüttenkäse", [["huettenkaese", 50, "g"]], true),
+  // Snacks
+  P("s_pre", "snack", "base", "Pre-Workout: Banane · Hafer", [["banane", 1, "Stück"], ["haferflocken", 40, "g"], ["milch15", 150, "ml"]]),
+  P("s_shake", "snack", "base", "Whey-Shake mit Milch", [["whey", 1, "Scoop"], ["milch15", 300, "ml"]]),
+  P("s_banane", "snack", "base", "Banane", [["banane", 1, "Stück"]]),
+  P("s_nuss", "snack", "base", "Walnüsse 30 g", [["walnuesse", 30, "g"]]),
+  P("s_quark", "snack", "base", "Late-Night-Quark 150 g", [["magerquark", 150, "g"]]),
+  P("s_hepa", "snack", "base", "Hepafast-Shake", [["hepafast", 1, "Portion"]]),
+  P("s_cola", "snack", "base", "Cola Zero 0,5 l", [["colazero", 500, "ml"]]),
+  P("s_wein", "snack", "base", "Weißwein 1 Glas", [["weisswein", 1, "Glas 0,2 l"]]),
+  // Abend – Bausteine: Eiweiß + Gemüse + Beilage frei kombinieren
+  P("a_haehnchen", "abend", "prot", "Hähnchenbrust", [["haehnchenbrust", 250, "g"]]),
+  P("a_pute", "abend", "prot", "Putenschnitzel", [["putenschnitzel", 250, "g"]]),
+  P("a_kabeljau", "abend", "prot", "Kabeljau", [["kabeljau", 250, "g"]]),
+  P("a_lachs", "abend", "prot", "Lachs", [["lachs", 250, "g"]]),
+  P("a_gemuese", "abend", "gem", "Frostergemüse", [["frostergemuese", 400, "g"]]),
+  P("a_reis", "abend", "beil", "+ Reis", [["reis", "rice", "g"]]),
+  P("a_nudeln", "abend", "beil", "+ Vollkornnudeln", [["nudeln", 80, "g"]]),
+  P("a_kartoffeln", "abend", "beil", "+ Kartoffeln", [["kartoffeln", 300, "g"]]),
+  P("a_oel", "abend", "extra", "+ Olivenöl", [["olivenoel", 1, "EL"]], true),
+  P("a_hepa_plus", "abend", "extra", "+ Hepafast-Shake", [["hepafast", 1, "Portion"]], true),
+  P("a_hepa", "abend", "base", "Ruhetag schnell: Gemüse · Hepafast", [["frostergemuese", 400, "g"], ["olivenoel", 1, "EL"], ["hepafast", 1, "Portion"]])
 ];
 
 const TYPES = [["train", "Kraft"], ["gravel", "Gravel"], ["rest", "Ruhetag"]];
@@ -644,10 +692,12 @@ function renderEntry(){
     const lastD = lastMealDate(mk);
     h += `<section class="meal" data-meal="${mk}">
       <div class="meal-head"><h2>${mn}</h2><div class="sum">${items.length ? `<b>${de(s.p)} g</b> Protein · <b>${de(s.kcal)}</b> kcal${badge}` : "noch leer"}</div></div>
-      <div class="chips">
-        ${PRESETS.filter(p => p.meal === mk).map(p => `<button class="chipbtn" type="button" data-preset="${p.id}">${esc(p.label)}</button>`).join("")}
-        ${lastD ? `<button class="chipbtn last" type="button" data-copy="${mk}" data-from="${lastD}">Wie ${wd(lastD)} ${shortDE(lastD)}</button>` : ""}
-      </div>
+      ${GROUPS[mk].map(([gk, gl]) => {
+        const ps = PRESETS.filter(p => p.meal === mk && p.grp === gk);
+        const copy = gk === GROUPS[mk][0][0] && lastD ? `<button class="chipbtn last" type="button" data-copy="${mk}" data-from="${lastD}">Wie ${wd(lastD)} ${shortDE(lastD)}</button>` : "";
+        if(!ps.length && !copy) return "";
+        return `<div class="chipgrp">${gl ? `<span class="gl">${esc(gl)}</span>` : ""}<div class="chips wrap">${ps.map(p => `<button class="chipbtn${p.merge ? " plus" : ""}" type="button" data-preset="${p.id}">${esc(p.label)}</button>`).join("")}${copy}</div></div>`;
+      }).join("")}
       ${items.length ? `<div class="items">${items.map(itemHTML).join("")}</div>` : ""}
       <div class="meal-actions">
         <button type="button" data-add="${mk}">+ Lebensmittel</button>
@@ -683,6 +733,11 @@ function addPreset(pid){
   p.items.forEach(([fid, q, u]) => {
     const qty = q === "rice" ? RICE[di.phase][di.type] : q;
     if(!qty) return;
+    if(p.merge){
+      // Baustein ist schon da: Menge erhöhen statt doppelte Zeile
+      const ex = dayEntries(curDate).find(e => e.meal === p.meal && e.fid === fid && e.unit === u);
+      if(ex){ changeQty(ex.id, String(r1(ex.qty + qty))); return; }
+    }
     const e = makeEntry(p.meal, fid, qty, u, "Vorlage"); if(!e) return;
     e.ts = Date.now() + n++;
     queue({t: "put", e});
@@ -976,7 +1031,7 @@ function renderInfo(){
 
   h += sec("tag", "Mein Tagesplan", `
     <table class="tbl"><tbody>
-      <tr><td><b>Frühstück</b><br><span class="sub">So–Fr</span></td><td>2 Eiweißbrötchen, 100 g Hüttenkäse oder Fitline 0,2 %, 80–100 g Putenbrust / Lachsschinken · ~55–60 g Protein</td></tr>
+      <tr><td><b>Frühstück</b><br><span class="sub">So–Fr</span></td><td>2 Eiweißbrötchen, 200 g Hüttenkäse oder Fitline 0,2 %, Belag (Schinken, Putenbrust, Hähnchenbrust) · ~55–60 g Protein</td></tr>
       <tr><td><b>Frühstück</b><br><span class="sub">Samstag</span></td><td>2 Mehrkornbrötchen vom Bäcker mit Butter und Aufschnitt, optional 2 Spiegeleier</td></tr>
       <tr><td><b>Mittag</b></td><td>250 g Magerquark mit Blaubeeren und Süßstoff (im Lean Bulk + 40 g Haferflocken), dazu 3 Scheiben Aldi- oder 2 Scheiben Lieken-Eiweißbrot mit Fitline/Pute · ~60–70 g Protein</td></tr>
       <tr><td><b>Vor dem Training</b></td><td>Banane + 40–50 g Haferflocken, 30–60 Min. vorher</td></tr>

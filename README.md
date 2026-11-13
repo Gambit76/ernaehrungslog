@@ -43,3 +43,4 @@ Im Repo liegen **keine Daten, keine URL und kein Schlüssel**, nur die App-Oberf
 ## Versionen
 
 - **v1** – Eintragen mit Vorlagen-Chips, Datenbank und freier Eingabe; Analyse Tag/Zeitraum; Info mit Garanleitungen und Plan; Offline-Warteschlange
+- **v3** – Chips modular: Basis-Chips plus „+“-Bausteine (Belag, Samstags-Extra, Quark-/Brot-Extras, Abend: Eiweiß · Gemüse · Beilage · Extras). Mengen sind Startwerte und in der Liste änderbar; gleicher Baustein erhöht die Menge. Neue Lebensmittel: Leberwurst, Gouda, Kartoffeln, Putenschnitzel; Scheiben-Einheit für Aufschnitt
