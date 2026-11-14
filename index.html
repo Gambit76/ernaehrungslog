@@ -72,10 +72,10 @@ header.bar{position:sticky;top:0;z-index:5;background:var(--bg);padding-top:calc
 .daynav .today{border:1px solid var(--line);background:var(--surface);border-radius:8px;min-height:40px;padding:0 10px;font-size:13px;font-weight:500}
 .dayopts{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center}
 .seg{display:flex;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:2px}
-.seg button{white-space:nowrap;border:0;background:transparent;border-radius:6px;padding:6px 10px;font-size:13px;color:var(--muted);font-weight:500;min-height:34px}
+.seg button{white-space:nowrap;border:0;background:transparent;border-radius:6px;padding:6px 8px;font-size:13px;color:var(--muted);font-weight:500;min-height:34px}
 .seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
 .dayopts .phase{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
-.dayopts .phase select{font-size:16px;font-weight:600;color:var(--ink);background:var(--input);border:1px solid var(--line);border-radius:8px;padding:6px 8px;min-height:38px}
+.dayopts .phase select{font-size:16px;font-weight:600;color:var(--ink);background:var(--input);border:1px solid var(--line);border-radius:8px;padding:6px 4px;min-height:38px}
 
 /* Tagessumme */
 .totals{position:sticky;top:var(--hdr,118px);z-index:4;background:var(--bg);padding:10px 0 8px;margin-top:6px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;border-bottom:1px solid var(--line)}
@@ -290,7 +290,7 @@ details.sec[open] > summary::after{content:"－"}
 
 <script>
 "use strict";
-const APP_VERSION = "v10";
+const APP_VERSION = "v11";
 
 /* ======================================================================
    Stammdaten: Lebensmittel (Werte je 100 g bzw. 100 ml), Vorlagen, Ziele
@@ -341,6 +341,7 @@ const DEFAULT_FOODS = [
   F("kartoffeln", "Kartoffeln (roh)", "Beilagen & Gemüse", "100 g", 77, 2, 17, 0.1, [], [300, "g"], "Rohgewicht. 300 g ≈ 70 g Reis (roh)."),
   F("olivenoel", "Olivenöl", "Fette", "100 g", 884, 0, 0, 100, [["EL", 10], ["TL", 4.5]], [1, "EL"]),
   F("weisswein", "Weißwein trocken", "Getränke", "100 ml", 72, 0.1, 0.6, 0, [["Glas 0,2 l", 200], ["Flasche", 750]], [1, "Glas 0,2 l"], "Alkohol: Proteinsynthese bis −37 %, Schlaf leidet."),
+  F("grauburgunder", "Grauburgunder trocken (Winter)", "Getränke", "100 ml", 73.3, 0.1, 0.4, 0, [["Glas 0,2 l", 200], ["Flasche", 750]], [1, "Flasche"], "Weingut Winter, 13 % vol, 4,3 g/l Restzucker; kcal aus Alkohol und Zucker gerechnet. Alkohol: Proteinsynthese bis −37 %, Schlaf leidet."),
   F("bier", "Bier (Pils)", "Getränke", "100 ml", 42, 0.5, 3, 0, [["Flasche 0,33 l", 330], ["0,5 l", 500]], [1, "0,5 l"]),
   F("colazero", "Cola Zero", "Getränke", "100 ml", 0.3, 0, 0, 0, [["Dose", 330], ["Flasche", 500]], [500, "ml"], "Nicht nach 16–17 Uhr.")
 ];
@@ -399,6 +400,7 @@ const PRESETS = [
   P("s_hepa", "snack", "base", "Hepafast-Shake", [["hepafast", 1, "Portion"]]),
   P("s_cola", "snack", "base", "Cola Zero 0,5 l", [["colazero", 500, "ml"]]),
   P("s_wein", "snack", "base", "Weißwein 1 Glas", [["weisswein", 1, "Glas 0,2 l"]]),
+  P("s_wein_fl", "snack", "base", "Weißwein 1 Flasche", [["grauburgunder", 1, "Flasche"]]),
   // Abend – Bausteine: Eiweiß + Gemüse + Beilage frei kombinieren
   P("a_haehnchen", "abend", "prot", "Hähnchenbrust", [["haehnchenbrust", 250, "g"]]),
   P("a_pute", "abend", "prot", "Putenschnitzel", [["putenschnitzel", 250, "g"]]),
@@ -417,6 +419,7 @@ const TYPES = [["train", "Kraft/Bike"], ["gravel", "Gravel"], ["rest", "Ruhetag"
 const TYPE_LONG = {train: "Krafttraining / E-Bike", gravel: "Gravelbike", rest: "Ruhetag"};
 const PHASES = [["bulk", "Lean Bulk"], ["erhaltung", "Erhaltung"], ["diaet", "Mini-Diät"]];
 const PHASE_NAME = Object.fromEntries(PHASES);
+const PHASE_SHORT = {bulk: "Bulk", erhaltung: "Erhalt", diaet: "Diät"}; // kurz für die Auswahl im Kopf
 // Tagesziele [min, max] – aus dem Lean-Bulk- und Phasenplan (Nov 2026)
 const T = (kcal, p, c, f) => ({kcal, p, c, f});
 const TARGETS = {
@@ -681,7 +684,7 @@ function renderEntry(){
     </div>
     <div class="dayopts">
       <div class="seg" role="group" aria-label="Tagestyp">${TYPES.map(([k, l]) => `<button type="button" data-type="${k}" aria-pressed="${di.type === k}">${l}</button>`).join("")}</div>
-      <label class="phase">Phase <select id="dPhase" aria-label="Phase für diesen Tag">${PHASES.map(([k, l]) => `<option value="${k}"${k === di.phase ? " selected" : ""}>${l}</option>`).join("")}</select></label>
+      <label class="phase" title="Phase"><select id="dPhase" aria-label="Phase für diesen Tag">${PHASES.map(([k, l]) => `<option value="${k}"${k === di.phase ? " selected" : ""}>${PHASE_SHORT[k]}</option>`).join("")}</select></label>
     </div>
     <div class="totals">
       ${meterHTML("kcal", tot.kcal, tg.kcal, "")}
@@ -949,7 +952,7 @@ function dayTips(t, tg, di, list){
   }
   if(t.f > tg.f[1] + 10) out.push(`<b>Fett:</b> ${de(t.f - tg.f[1])} g über Ziel. Häufige Ursachen: Öl beim Braten, Nüsse, Butter, Lachs.`);
   if((di.type === "train" || di.type === "gravel") && t.c < tg.c[0] - 40) out.push(`<b>Kohlenhydrate:</b> An Trainingstagen gezielt um das Training herum (Banane vorher, Reis abends) – das füllt Glykogen und senkt Cortisol.`);
-  if(list.some(e => e.fid === "weisswein" || e.fid === "bier")) out.push(`<b>Alkohol:</b> drückt die Proteinsynthese um bis zu 37 % und stört den Tiefschlaf. Viel Wasser dazu, morgen auf die Waage nicht zu viel geben (Wasser).`);
+  if(list.some(e => e.fid === "weisswein" || e.fid === "grauburgunder" || e.fid === "bier")) out.push(`<b>Alkohol:</b> drückt die Proteinsynthese um bis zu 37 % und stört den Tiefschlaf. Viel Wasser dazu, morgen auf die Waage nicht zu viel geben (Wasser).`);
   return out;
 }
 function rangeDates(){
