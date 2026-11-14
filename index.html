@@ -72,7 +72,7 @@ header.bar{position:sticky;top:0;z-index:5;background:var(--bg);padding-top:calc
 .daynav .today{border:1px solid var(--line);background:var(--surface);border-radius:8px;min-height:40px;padding:0 10px;font-size:13px;font-weight:500}
 .dayopts{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center}
 .seg{display:flex;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:2px}
-.seg button{border:0;background:transparent;border-radius:6px;padding:6px 10px;font-size:13px;color:var(--muted);font-weight:500;min-height:34px}
+.seg button{white-space:nowrap;border:0;background:transparent;border-radius:6px;padding:6px 10px;font-size:13px;color:var(--muted);font-weight:500;min-height:34px}
 .seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
 .dayopts .phase{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
 .dayopts .phase select{font-size:16px;font-weight:600;color:var(--ink);background:var(--input);border:1px solid var(--line);border-radius:8px;padding:6px 8px;min-height:38px}
@@ -290,7 +290,7 @@ details.sec[open] > summary::after{content:"－"}
 
 <script>
 "use strict";
-const APP_VERSION = "v9";
+const APP_VERSION = "v10";
 
 /* ======================================================================
    Stammdaten: Lebensmittel (Werte je 100 g bzw. 100 ml), Vorlagen, Ziele
@@ -413,16 +413,16 @@ const PRESETS = [
   P("a_hepa", "abend", "base", "Ruhetag schnell: Gemüse · Hepafast", [["frostergemuese", 400, "g"], ["olivenoel", 1, "EL"], ["hepafast", 1, "Portion"]])
 ];
 
-const TYPES = [["train", "Kraft"], ["gravel", "Gravel"], ["rest", "Ruhetag"]];
-const TYPE_LONG = {train: "Krafttraining", gravel: "Gravelbike", rest: "Ruhetag"};
+const TYPES = [["train", "Kraft/Bike"], ["gravel", "Gravel"], ["rest", "Ruhetag"]];
+const TYPE_LONG = {train: "Krafttraining / E-Bike", gravel: "Gravelbike", rest: "Ruhetag"};
 const PHASES = [["bulk", "Lean Bulk"], ["erhaltung", "Erhaltung"], ["diaet", "Mini-Diät"]];
 const PHASE_NAME = Object.fromEntries(PHASES);
 // Tagesziele [min, max] – aus dem Lean-Bulk- und Phasenplan (Nov 2026)
 const T = (kcal, p, c, f) => ({kcal, p, c, f});
 const TARGETS = {
-  bulk: {train: T([2900, 3000], [170, 190], [330, 370], [80, 95]), gravel: T([2900, 3000], [160, 180], [340, 380], [90, 100]), rest: T([2600, 2700], [170, 190], [280, 320], [80, 90])},
-  erhaltung: {train: T([2600, 2700], [175, 185], [290, 300], [75, 85]), gravel: T([2600, 2700], [175, 185], [290, 300], [75, 85]), rest: T([2400, 2500], [175, 185], [240, 250], [75, 85])},
-  diaet: {train: T([2000, 2100], [180, 190], [170, 210], [65, 75]), gravel: T([2000, 2100], [180, 190], [180, 220], [65, 75]), rest: T([1900, 2000], [180, 190], [130, 170], [65, 75])}
+  bulk: {train: T([2900, 3000], [170, 190], [330, 370], [80, 95]), gravel: T([3350, 3450], [160, 180], [410, 450], [90, 100]), rest: T([2600, 2700], [170, 190], [280, 320], [80, 90])},
+  erhaltung: {train: T([2600, 2700], [175, 185], [290, 300], [75, 85]), gravel: T([3050, 3150], [175, 185], [360, 370], [75, 85]), rest: T([2400, 2500], [175, 185], [240, 250], [75, 85])},
+  diaet: {train: T([2000, 2100], [180, 190], [170, 210], [65, 75]), gravel: T([2300, 2400], [180, 190], [225, 265], [65, 75]), rest: T([1900, 2000], [180, 190], [130, 170], [65, 75])}
 };
 const PROTEIN_MEAL_MIN = 40; // anabole Schwelle je Hauptmahlzeit
 
@@ -1036,7 +1036,7 @@ function renderInfo(){
     <div class="tblwrap"><table class="tbl"><thead><tr><th>Tag</th><th class="n">kcal</th><th class="n">Protein</th><th class="n">KH</th><th class="n">Fett</th></tr></thead><tbody>
       ${TYPES.map(([k]) => { const t = tgt[k]; return `<tr><td>${TYPE_LONG[k]}</td><td class="n">${de(t.kcal[0])}–${de(t.kcal[1])}</td><td class="n">${t.p[0]}–${t.p[1]}</td><td class="n">${t.c[0]}–${t.c[1]}</td><td class="n">${t.f[0]}–${t.f[1]}</td></tr>`; }).join("")}
     </tbody></table></div>
-    <p>Standard-Tagestyp: Mo/Mi/Fr Krafttraining, Sa Gravelbike, sonst Ruhetag. Im Reiter Eintragen pro Tag umstellbar.</p>
+    <p>Standard-Tagestyp: Mo/Mi/Fr Kraft/Bike (Krafttraining oder E-Bike-Pendeln, beides ca. 300 kcal), Sa Gravelbike, sonst Ruhetag. Im Reiter Eintragen pro Tag umstellbar.</p>
     <div class="callout">Protein bleibt in allen Phasen bei 170–190 g. Im Lean Bulk kommt das Plus über Kohlenhydrate (Reis, Haferflocken, Obst), nicht über mehr Eiweiß.<br>Kalibrieren alle 2 Wochen über den 7-Tage-Schnitt der Waage: &lt; +0,1 kg/Woche nach 4 Wochen → +100–150 kcal; &gt; +0,2 kg/Woche → −150 kcal.</div>
     <p><b>Stopp-Kriterien Lean Bulk:</b> 7-Tage-Schnitt dauerhaft &gt; 90,5 kg, Withings-KFA dauerhaft &gt; 15 % oder Bauchumfang &gt; +2 cm.</p>`);
 
