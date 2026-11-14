@@ -290,7 +290,7 @@ details.sec[open] > summary::after{content:"－"}
 
 <script>
 "use strict";
-const APP_VERSION = "v6";
+const APP_VERSION = "v7";
 
 /* ======================================================================
    Stammdaten: Lebensmittel (Werte je 100 g bzw. 100 ml), Vorlagen, Ziele
@@ -664,12 +664,9 @@ function meterHTML(label, v, rng, unit){
     <span class="t">${de(rng[0])}–${de(rng[1])}</span>
   </div>`;
 }
-function lastMealDate(meal){
-  let best = null;
-  for(const e of Object.values(entries)){
-    if(e.meal === meal && e.date < curDate && (!best || e.date > best)) best = e.date;
-  }
-  return best;
+function prevDayWith(meal){
+  const d = addDays(curDate, -1);
+  return Object.values(entries).some(e => e.meal === meal && e.date === d) ? d : null;
 }
 function renderEntry(){
   const di = dayInfo(curDate);
@@ -697,12 +694,12 @@ function renderEntry(){
     const s = sumOf(items);
     const main = mk !== "snack";
     const badge = main && items.length ? `<span class="badge ${s.p >= PROTEIN_MEAL_MIN ? "ok" : "low"}">${s.p >= PROTEIN_MEAL_MIN ? "✓ ≥40 g" : "< 40 g"}</span>` : "";
-    const lastD = lastMealDate(mk);
+    const lastD = prevDayWith(mk);
     h += `<section class="meal" data-meal="${mk}">
       <div class="meal-head"><h2>${mn}</h2><div class="sum">${items.length ? `<b>${de(s.p)} g</b> Protein · <b>${de(s.kcal)}</b> kcal${badge}` : "noch leer"}</div></div>
       ${GROUPS[mk].map(([gk, gl]) => {
         const ps = PRESETS.filter(p => p.meal === mk && p.grp === gk);
-        const copy = gk === GROUPS[mk][0][0] && lastD ? `<button class="chipbtn last" type="button" data-copy="${mk}" data-from="${lastD}">Wie ${wd(lastD)} ${shortDE(lastD)}</button>` : "";
+        const copy = gk === GROUPS[mk][0][0] && lastD ? `<button class="chipbtn last" type="button" data-copy="${mk}" data-from="${lastD}">Wie Vortag</button>` : "";
         if(!ps.length && !copy) return "";
         return `<div class="chipgrp">${gl ? `<span class="gl">${esc(gl)}</span>` : ""}<div class="chips wrap">${ps.map(p => `<button class="chipbtn${p.merge ? " plus" : ""}" type="button" data-preset="${p.id}">${esc(p.label)}</button>`).join("")}${copy}</div></div>`;
       }).join("")}
