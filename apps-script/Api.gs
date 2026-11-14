@@ -242,7 +242,7 @@ function NL_ensureSheets_() {
   if (!ss.getSheetByName(NL_OVERVIEW)) {
     const ov = ss.insertSheet(NL_OVERVIEW);
     ov.getRange('A1').setFormula(
-      "=IFERROR(QUERY('" + NL_ENTRIES + "'!A:I,\"select A, sum(F), sum(G), sum(H), sum(I) where A is not null and (J is null or J <> 'sport') " +
+      "=IFERROR(QUERY('" + NL_ENTRIES + "'!A:J,\"select A, sum(F), sum(G), sum(H), sum(I) where A is not null and (J is null or J <> 'sport') " +
       "group by A order by A desc label sum(F) 'kcal', sum(G) 'Protein (g)', sum(H) 'KH (g)', sum(I) 'Fett (g)'\",1),\"Noch keine Einträge\")");
     ov.getRange('A:A').setNumberFormat('dd.MM.yyyy');
     ov.getRange('B:E').setNumberFormat('0');
