@@ -290,7 +290,7 @@ details.sec[open] > summary::after{content:"－"}
 
 <script>
 "use strict";
-const APP_VERSION = "v7";
+const APP_VERSION = "v8";
 
 /* ======================================================================
    Stammdaten: Lebensmittel (Werte je 100 g bzw. 100 ml), Vorlagen, Ziele
@@ -499,8 +499,27 @@ function inheritedPhase(iso){ // Phase des letzten davor gespeicherten Tages, so
   return best ? days[best].phase : defaultPhase;
 }
 function dayInfo(iso){ const d = days[iso] || {}; return {type: d.type || defaultType(iso), phase: d.phase || inheritedPhase(iso), note: d.note || "", stored: !!days[iso]}; }
-function targetFor(iso){ const d = dayInfo(iso); return TARGETS[d.phase][d.type]; }
-function dayEntries(iso){ return Object.values(entries).filter(e => e.date === iso).sort((a, b) => (a.ts || 0) - (b.ts || 0)); }
+// Sport: Verbrauch hebt die Ziel-kcal an. Der im Tagestyp schon eingerechnete Trainingszuschlag (Tagestyp minus Ruhetag) wird abgezogen.
+const SPORTS = [
+  {id: "kraft", label: "Kraft", name: "Krafttraining", unit: "Min", def: 60, k: 6},
+  {id: "gravel", label: "Gravel", name: "Gravelbike", unit: "km", def: 35, k: 22},
+  {id: "spinning", label: "Spinning", name: "Spinning", unit: "Min", def: 45, k: 10},
+  {id: "ebike", label: "E-Bike", name: "E-Bike", unit: "km", def: 20, k: 12},
+  {id: "sonst", label: "Sonstiges", name: "Sport", unit: "Min", def: 30, k: 8}
+];
+function sportEntries(iso){ return Object.values(entries).filter(e => e.date === iso && e.src === "sport").sort((a, b) => (a.ts || 0) - (b.ts || 0)); }
+function dayEntries(iso){ return Object.values(entries).filter(e => e.date === iso && e.src !== "sport").sort((a, b) => (a.ts || 0) - (b.ts || 0)); }
+function dayTarget(iso){
+  const di = dayInfo(iso), base = TARGETS[di.phase][di.type];
+  const burn = sportEntries(iso).reduce((s, e) => s + (e.kcal || 0), 0);
+  const mid = r => (r[0] + r[1]) / 2;
+  const allow = mid(base.kcal) - mid(TARGETS[di.phase].rest.kcal);
+  const extra = burn > allow ? Math.round((burn - allow) / 10) * 10 : 0;
+  if(!extra) return Object.assign({}, base, {extra: 0, burn});
+  const dc = Math.round(extra * 0.6 / 4 / 5) * 5; // 60 % des Zusatzes als Kohlenhydrate
+  return Object.assign({}, base, {kcal: [base.kcal[0] + extra, base.kcal[1] + extra], c: [base.c[0] + dc, base.c[1] + dc], extra, burn});
+}
+function targetFor(iso){ return dayTarget(iso); }
 function sumOf(list){ return list.reduce((s, e) => ({kcal: s.kcal + (e.kcal||0), p: s.p + (e.p||0), c: s.c + (e.c||0), f: s.f + (e.f||0)}), {kcal: 0, p: 0, c: 0, f: 0}); }
 function status(v, [lo, hi]){ return v < lo ? "under" : v > hi ? "over" : "in"; }
 
@@ -666,11 +685,11 @@ function meterHTML(label, v, rng, unit){
 }
 function prevDayWith(meal){
   const d = addDays(curDate, -1);
-  return Object.values(entries).some(e => e.meal === meal && e.date === d) ? d : null;
+  return dayEntries(d).some(e => e.meal === meal) ? d : null;
 }
 function renderEntry(){
   const di = dayInfo(curDate);
-  const tg = TARGETS[di.phase][di.type];
+  const tg = dayTarget(curDate);
   const list = dayEntries(curDate);
   const tot = sumOf(list);
   let h = `<div class="daynav">
@@ -710,8 +729,42 @@ function renderEntry(){
       </div>
     </section>`;
   }
+  const sp = sportEntries(curDate);
+  h += `<section class="meal">
+      <div class="meal-head"><h2>Sport</h2><div class="sum">${sp.length ? `<b>${de(tg.burn)}</b> kcal Verbrauch${tg.extra ? ` · Ziel +${de(tg.extra)} kcal` : ""}` : "kein Sport erfasst"}</div></div>
+      <div class="chipgrp"><div class="chips wrap">${SPORTS.map(x => `<button class="chipbtn" type="button" data-sport="${x.id}">${esc(x.label)}</button>`).join("")}</div></div>
+      ${sp.length ? `<div class="items">${sp.map(sportItemHTML).join("")}</div>` : ""}
+    </section>`;
   h += `<div class="note"><label for="dNote">Notiz zum Tag</label><textarea id="dNote" rows="2" placeholder="z. B. Restaurant, Feier, krank …">${esc(di.note)}</textarea></div>`;
   $("pEntry").innerHTML = h;
+}
+function sportItemHTML(e){
+  return `<div class="item" data-id="${esc(e.id)}">
+    <span class="nm">${esc(e.name)}</span>
+    <span class="qty"><input inputmode="decimal" value="${esc(String(e.qty ?? "").replace(".", ","))}" data-qty="${esc(e.id)}" aria-label="Menge ${esc(e.name)}"><span>${esc(e.unit || "")}</span></span>
+    <button class="del" type="button" data-del="${esc(e.id)}" aria-label="${esc(e.name)} löschen">×</button>
+    <span class="mac">${de(e.kcal)} kcal Verbrauch</span>
+  </div>`;
+}
+function openSport(id){
+  const x = SPORTS.find(v => v.id === id); if(!x) return;
+  openDlg(`<div class="dlg-head"><h2>Sport: ${esc(x.name)}</h2><button type="button" data-close>Abbrechen</button></div>
+    <div class="dlg-body form">
+      <label>${x.unit === "km" ? "Strecke (km)" : "Dauer (Min)"}<input id="sQty" inputmode="decimal" value="${x.def}"></label>
+      <label>Verbrauch (kcal)<input id="sK" inputmode="decimal" value="${r0(x.def * x.k)}"></label>
+      <p class="fnote">Grobe Schätzung (ca. ${x.k} kcal je ${x.unit}), gern überschreiben, z. B. mit dem Wert vom Tacho oder der Uhr. Der Verbrauch hebt die Ziel-kcal des Tages an, Gegessenes bleibt unverändert.</p>
+    </div>
+    <div class="dlg-foot"><button class="primary" type="button" id="sOk">Hinzufügen</button></div>`);
+  let manual = false;
+  $("sK").oninput = () => { manual = true; };
+  $("sQty").oninput = () => { if(!manual) $("sK").value = r0((num($("sQty").value) || 0) * x.k); };
+  $("sOk").onclick = () => {
+    const qty = num($("sQty").value) || x.def, kcal = r0(num($("sK").value));
+    if(!kcal){ $("sK").focus(); return; }
+    const e = {id: newId(), date: curDate, meal: "snack", name: x.name, qty, unit: x.unit, kcal, p: 0, c: 0, f: 0, src: "sport", fid: "", ts: Date.now()};
+    queue({t: "put", e}); ensureDayStored(); closeDlg(); renderEntry(); toast(x.name + " eingetragen");
+  };
+  setTimeout(() => $("sQty").select(), 50);
 }
 function itemHTML(e){
   const f = e.fid && FOODS[e.fid];
@@ -891,7 +944,7 @@ function renderAna(){
 }
 function anaDay(){
   const di = dayInfo(curDate);
-  const tg = TARGETS[di.phase][di.type];
+  const tg = dayTarget(curDate);
   const list = dayEntries(curDate);
   const t = sumOf(list);
   let h = `<div class="daynav" style="margin-top:0">
@@ -900,6 +953,7 @@ function anaDay(){
       <button class="arrow" type="button" data-nav="1" aria-label="Folgetag">›</button>
     </div>
     <p class="sub" style="margin:0;font-size:13px;color:var(--muted)">${longDE(curDate)} · ${TYPE_LONG[di.type]} · ${PHASE_NAME[di.phase]}</p>`;
+  if(tg.burn) h += `<p class="sub" style="margin:0;font-size:13px;color:var(--muted)">Sport: ${sportEntries(curDate).map(e => `${esc(e.name)} ${de(e.qty, 1)} ${esc(e.unit)}`).join(", ")} · ${de(tg.burn)} kcal Verbrauch${tg.extra ? `, Ziel +${de(tg.extra)} kcal` : ""}</p>`;
   if(!list.length) return h + `<div class="empty">Für diesen Tag gibt es noch keine Einträge.</div>`;
   h += `<div class="tiles">${tileHTML("Kalorien", t.kcal, tg.kcal, "kcal")}${tileHTML("Protein", t.p, tg.p, "g")}${tileHTML("Kohlenhydrate", t.c, tg.c, "g")}${tileHTML("Fett", t.f, tg.f, "g")}</div>`;
 
@@ -1037,6 +1091,7 @@ function renderInfo(){
       ${TYPES.map(([k]) => { const t = tgt[k]; return `<tr><td>${TYPE_LONG[k]}</td><td class="n">${de(t.kcal[0])}–${de(t.kcal[1])}</td><td class="n">${t.p[0]}–${t.p[1]}</td><td class="n">${t.c[0]}–${t.c[1]}</td><td class="n">${t.f[0]}–${t.f[1]}</td></tr>`; }).join("")}
     </tbody></table></div>
     <p>Standard-Tagestyp: Mo/Mi/Fr Krafttraining, Sa Gravelbike, sonst Ruhetag. Im Reiter Eintragen pro Tag umstellbar.</p>
+    <p><b>Sport:</b> Unter Eintragen erfasste Aktivitäten (z. B. Gravel 35 km) heben die Ziel-kcal an, und zwar um den Verbrauch abzüglich des Zuschlags, der im Tagestyp schon steckt. 60 % des Zusatzes gehen als Kohlenhydrate auf das KH-Ziel.</p>
     <div class="callout">Protein bleibt in allen Phasen bei 170–190 g. Im Lean Bulk kommt das Plus über Kohlenhydrate (Reis, Haferflocken, Obst), nicht über mehr Eiweiß.<br>Kalibrieren alle 2 Wochen über den 7-Tage-Schnitt der Waage: &lt; +0,1 kg/Woche nach 4 Wochen → +100–150 kcal; &gt; +0,2 kg/Woche → −150 kcal.</div>
     <p><b>Stopp-Kriterien Lean Bulk:</b> 7-Tage-Schnitt dauerhaft &gt; 90,5 kg, Withings-KFA dauerhaft &gt; 15 % oder Bauchumfang &gt; +2 cm.</p>`);
 
@@ -1184,6 +1239,7 @@ document.addEventListener("click", ev => {
   else if(d.copy) copyMeal(d.copy, d.from);
   else if(d.add) openFoodPicker(d.add);
   else if(d.free) openFree(d.free);
+  else if(d.sport) openSport(d.sport);
   else if(d.del) delEntry(d.del);
   else if(d.close !== undefined) closeDlg();
   else if(d.back) openFoodPicker(d.back);

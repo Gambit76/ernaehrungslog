@@ -13,7 +13,7 @@
  *  - Einträge:      eine Zeile pro Lebensmittel und Mahlzeit
  *  - Tage:          Tagestyp (Training/Gravel/Ruhetag), Phase und Notiz je Datum
  *  - Lebensmittel:  eigene Lebensmittel und korrigierte Nährwerte (überschreiben die App-Standardwerte)
- *  - Tagesübersicht: Summen je Tag (Formel, nur zum Anschauen)
+ *  - Tagesübersicht: Summen je Tag (Formel, nur zum Anschauen; Sport-Einträge mit Quelle „sport“ zählen nicht als Essen)
  */
 
 const NL_ENTRIES = 'Einträge';
@@ -242,7 +242,7 @@ function NL_ensureSheets_() {
   if (!ss.getSheetByName(NL_OVERVIEW)) {
     const ov = ss.insertSheet(NL_OVERVIEW);
     ov.getRange('A1').setFormula(
-      "=IFERROR(QUERY('" + NL_ENTRIES + "'!A:I,\"select A, sum(F), sum(G), sum(H), sum(I) where A is not null " +
+      "=IFERROR(QUERY('" + NL_ENTRIES + "'!A:I,\"select A, sum(F), sum(G), sum(H), sum(I) where A is not null and (J is null or J <> 'sport') " +
       "group by A order by A desc label sum(F) 'kcal', sum(G) 'Protein (g)', sum(H) 'KH (g)', sum(I) 'Fett (g)'\",1),\"Noch keine Einträge\")");
     ov.getRange('A:A').setNumberFormat('dd.MM.yyyy');
     ov.getRange('B:E').setNumberFormat('0');
