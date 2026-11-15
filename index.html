@@ -290,7 +290,7 @@ details.sec[open] > summary::after{content:"－"}
 
 <script>
 "use strict";
-const APP_VERSION = "v12";
+const APP_VERSION = "v13";
 
 /* ======================================================================
    Stammdaten: Lebensmittel (Werte je 100 g bzw. 100 ml), Vorlagen, Ziele
@@ -339,7 +339,7 @@ const DEFAULT_FOODS = [
   F("nudeln", "Vollkornnudeln (roh)", "Beilagen & Gemüse", "100 g", 350, 13, 64, 2.5, [], [100, "g"], "Rohgewicht."),
   F("suesskartoffel", "Süßkartoffel", "Beilagen & Gemüse", "100 g", 86, 1.6, 20, 0.1, [], [250, "g"]),
   F("kartoffeln", "Kartoffeln (roh)", "Beilagen & Gemüse", "100 g", 77, 2, 17, 0.1, [], [300, "g"], "Rohgewicht. 300 g ≈ 70 g Reis (roh)."),
-  F("rapsoel", "Rapsöl (zum Braten)", "Fette", "100 g", 884, 0, 0, 100, [["EL", 10], ["TL", 4.5]], [1, "EL"], "1 EL ≈ 10 g ≈ 88 kcal. Gemüse ca. 2 EL, Hähnchen ca. 1 EL."),
+  F("rapsoel", "Rapsöl (zum Braten)", "Fette", "100 g", 884, 0, 0, 100, [["EL", 10], ["TL", 4.5]], [1, "EL"], "1 EL ≈ 10 g ≈ 88 kcal. Gemüse ca. 2 EL, Eiweiß (Fleisch/Fisch) ca. 1 EL."),
   F("olivenoel", "Olivenöl", "Fette", "100 g", 884, 0, 0, 100, [["EL", 10], ["TL", 4.5]], [1, "EL"]),
   F("weisswein", "Weißwein trocken", "Getränke", "100 ml", 72, 0.1, 0.6, 0, [["Glas 0,2 l", 200], ["Flasche", 750]], [1, "Glas 0,2 l"], "Alkohol: Proteinsynthese bis −37 %, Schlaf leidet."),
   F("grauburgunder", "Grauburgunder trocken (Winter)", "Getränke", "100 ml", 73.3, 0.1, 0.4, 0, [["Glas 0,2 l", 200], ["Flasche", 750]], [1, "Flasche"], "Weingut Winter, 13 % vol, 4,3 g/l Restzucker; kcal aus Alkohol und Zucker gerechnet. Alkohol: Proteinsynthese bis −37 %, Schlaf leidet."),
@@ -405,9 +405,9 @@ const PRESETS = [
   P("s_wein_fl", "snack", "base", "Weißwein 1 Flasche", [["grauburgunder", 1, "Flasche"]]),
   // Abend – Bausteine: Eiweiß + Gemüse + Beilage frei kombinieren
   P("a_haehnchen", "abend", "prot", "Hähnchenbrust · 1 EL Öl", [["haehnchenbrust", 250, "g"], ["rapsoel", 1, "EL"]]),
-  P("a_pute", "abend", "prot", "Putenschnitzel", [["putenschnitzel", 250, "g"]]),
-  P("a_kabeljau", "abend", "prot", "Kabeljau", [["kabeljau", 250, "g"]]),
-  P("a_lachs", "abend", "prot", "Lachs", [["lachs", 250, "g"]]),
+  P("a_pute", "abend", "prot", "Putenschnitzel · 1 EL Öl", [["putenschnitzel", 250, "g"], ["rapsoel", 1, "EL"]]),
+  P("a_kabeljau", "abend", "prot", "Kabeljau · 1 EL Öl", [["kabeljau", 250, "g"], ["rapsoel", 1, "EL"]]),
+  P("a_lachs", "abend", "prot", "Lachs · 1 EL Öl", [["lachs", 250, "g"], ["rapsoel", 1, "EL"]]),
   P("a_gemuese", "abend", "gem", "Frostergemüse · 2 EL Öl", [["frostergemuese", 400, "g"], ["rapsoel", 2, "EL"]]),
   P("a_reis", "abend", "beil", "+ Reis", [["reis", "rice", "g"]]),
   P("a_nudeln", "abend", "beil", "+ Vollkornnudeln", [["nudeln", 80, "g"]]),
@@ -1052,7 +1052,7 @@ function renderInfo(){
       <tr><td><b>Mittag</b></td><td>250 g Magerquark mit Blaubeeren und Süßstoff (im Lean Bulk + 40 g Haferflocken), dazu 3 Scheiben Aldi- oder 2 Scheiben Lieken-Eiweißbrot mit Buko/Pute · ~60–70 g Protein</td></tr>
       <tr><td><b>Vor dem Training</b></td><td>Banane + 40–50 g Haferflocken, 30–60 Min. vorher</td></tr>
       <tr><td><b>Nach dem Training</b></td><td>Whey-Shake nur, wenn das Abendessen mehr als 2 Std. entfernt ist</td></tr>
-      <tr><td><b>Abend</b></td><td>200–250 g Hähnchenbrust, Kabeljau oder Lachs, 400 g Frostergemüse, Rapsöl zum Braten (Gemüse ca. 2 EL, Hähnchen ca. 1 EL ≈ 265 kcal), Reis roh: Lean Bulk ${RICE.bulk.train} g an Trainingstagen / ${RICE.bulk.rest} g an Ruhetagen</td></tr>
+      <tr><td><b>Abend</b></td><td>200–250 g Hähnchenbrust, Kabeljau oder Lachs, 400 g Frostergemüse, Rapsöl zum Braten (Gemüse ca. 2 EL, Fleisch/Fisch ca. 1 EL ≈ 265 kcal), Reis roh: Lean Bulk ${RICE.bulk.train} g an Trainingstagen / ${RICE.bulk.rest} g an Ruhetagen</td></tr>
       <tr><td><b>Ruhetag schnell</b></td><td>Gemüse + Bodymed-Hepafast-Shake, wenn keine Lust auf Hähnchen</td></tr>
       <tr><td><b>Spät noch Hunger</b></td><td>100–150 g Magerquark mit Sprudelwasser, ½ Hepafast oder 1–2 Eier</td></tr>
     </tbody></table>
@@ -1073,7 +1073,7 @@ function renderInfo(){
       <li><b>Auftauen:</b> Über Nacht im Kühlschrank oder im dichten Beutel im kalten Wasserbad (30–45 Min., Wasser alle 30 Min. wechseln).</li>
       <li><b>Trocken tupfen:</b> Gründlich, TK-Fisch gibt viel Wasser ab.</li>
       <li><b>Würzen:</b> Salz und Pfeffer erst direkt vor dem Braten, Zitrone erst danach.</li>
-      <li><b>Braten:</b> Mittlere bis hohe Hitze, ca. 1 TL Öl. Schöne Seite nach unten, <b>3–4 Min.</b> ohne Bewegen.</li>
+      <li><b>Braten:</b> Mittlere bis hohe Hitze, ca. 1 EL Rapsöl. Schöne Seite nach unten, <b>3–4 Min.</b> ohne Bewegen.</li>
       <li><b>Wenden:</b> Vorsichtig mit breitem Wender, <b>2–3 Min.</b>, Herd aus, 1 Min. Restwärme.</li>
     </ol>
     <div class="callout">Gar, wenn er sich in großen Blättern teilt und innen noch leicht glasig ist (58–60 °C). Dicke Filets (&gt; 2,5 cm) pro Seite +1 Min. Gemüse zuerst starten, der Fisch braucht nur 6–7 Min.</div>
@@ -1081,7 +1081,7 @@ function renderInfo(){
     <h3>Lachsfilet (mit Haut)</h3>
     <ol>
       <li><b>Trocken tupfen,</b> salzen, pfeffern, optional Zitronenabrieb (Saft erst danach).</li>
-      <li><b>Pfanne:</b> Mittlere bis hohe Hitze, nur ca. 1 TL Öl – Lachs bringt eigenes Fett mit.</li>
+      <li><b>Pfanne:</b> Mittlere bis hohe Hitze, ca. 1 EL Rapsöl (Lachs bringt zusätzlich eigenes Fett mit).</li>
       <li><b>Hautseite zuerst:</b> 30 Sek. leicht andrücken, dann <b>4–5 Min.</b> ohne Bewegen, bis die Haut kross ist und das Filet seitlich zu zwei Dritteln gar aussieht.</li>
       <li><b>Wenden:</b> Nur noch <b>1–2 Min.</b>, dann Herd aus, Restwärme gart nach.</li>
     </ol>

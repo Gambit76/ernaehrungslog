@@ -48,3 +48,4 @@ Im Repo liegen **keine Daten, keine URL und kein Schlüssel**, nur die App-Oberf
 - **v5** – Fitline-Streichkäse entfernt; körniger Frischkäse fettreduziert (0,9 %) als Basis; Buko Balance/India/Ananas als Chips beim Mittag
 - **v6** – Neues Lebensmittel „Brot (Vollkorn/Mischbrot, normal)“ in Brot & Brötchen (Scheibe ≈ 45 g)
 - **v12** – Neues Lebensmittel „Rapsöl (zum Braten)“. Abend-Chips „Frostergemüse“ und „Hähnchenbrust“ tragen das Bratöl gleich mit ein (2 EL bzw. 1 EL, Öl-Zeilen summieren sich zu einer Zeile); „+ Rapsöl 1 EL“ ersetzt „+ Olivenöl“; Chip „Ruhetag schnell“ mit 2 EL Rapsöl. sw.js wiederhergestellt (war seit v6 leer)
+- **v13** – Auch „Putenschnitzel“, „Kabeljau“ und „Lachs“ tragen 1 EL Rapsöl mit ein (wie Hähnchen); Garanleitungen auf 1 EL Rapsöl angepasst
