@@ -290,7 +290,7 @@ details.sec[open] > summary::after{content:"－"}
 
 <script>
 "use strict";
-const APP_VERSION = "v11";
+const APP_VERSION = "v12";
 
 /* ======================================================================
    Stammdaten: Lebensmittel (Werte je 100 g bzw. 100 ml), Vorlagen, Ziele
@@ -339,6 +339,7 @@ const DEFAULT_FOODS = [
   F("nudeln", "Vollkornnudeln (roh)", "Beilagen & Gemüse", "100 g", 350, 13, 64, 2.5, [], [100, "g"], "Rohgewicht."),
   F("suesskartoffel", "Süßkartoffel", "Beilagen & Gemüse", "100 g", 86, 1.6, 20, 0.1, [], [250, "g"]),
   F("kartoffeln", "Kartoffeln (roh)", "Beilagen & Gemüse", "100 g", 77, 2, 17, 0.1, [], [300, "g"], "Rohgewicht. 300 g ≈ 70 g Reis (roh)."),
+  F("rapsoel", "Rapsöl (zum Braten)", "Fette", "100 g", 884, 0, 0, 100, [["EL", 10], ["TL", 4.5]], [1, "EL"], "1 EL ≈ 10 g ≈ 88 kcal. Gemüse ca. 2 EL, Hähnchen ca. 1 EL."),
   F("olivenoel", "Olivenöl", "Fette", "100 g", 884, 0, 0, 100, [["EL", 10], ["TL", 4.5]], [1, "EL"]),
   F("weisswein", "Weißwein trocken", "Getränke", "100 ml", 72, 0.1, 0.6, 0, [["Glas 0,2 l", 200], ["Flasche", 750]], [1, "Glas 0,2 l"], "Alkohol: Proteinsynthese bis −37 %, Schlaf leidet."),
   F("grauburgunder", "Grauburgunder trocken (Winter)", "Getränke", "100 ml", 73.3, 0.1, 0.4, 0, [["Glas 0,2 l", 200], ["Flasche", 750]], [1, "Flasche"], "Weingut Winter, 13 % vol, 4,3 g/l Restzucker; kcal aus Alkohol und Zucker gerechnet. Alkohol: Proteinsynthese bis −37 %, Schlaf leidet."),
@@ -358,6 +359,7 @@ const GROUPS = {
   snack: [["base", ""]],
   abend: [["prot", "Eiweiß"], ["gem", "Gemüse"], ["beil", "Beilage"], ["extra", "Extras"], ["base", "Schnell"]]
 };
+const MERGE_FIDS = new Set(["rapsoel"]); // Bratöl steckt in mehreren Chips und soll sich zu einer Zeile summieren
 const P = (id, meal, grp, label, items, merge) => ({id, meal, grp, label, items, merge: !!merge});
 const PRESETS = [
   // Frühstück – Basis
@@ -402,17 +404,17 @@ const PRESETS = [
   P("s_wein", "snack", "base", "Weißwein 1 Glas", [["weisswein", 1, "Glas 0,2 l"]]),
   P("s_wein_fl", "snack", "base", "Weißwein 1 Flasche", [["grauburgunder", 1, "Flasche"]]),
   // Abend – Bausteine: Eiweiß + Gemüse + Beilage frei kombinieren
-  P("a_haehnchen", "abend", "prot", "Hähnchenbrust", [["haehnchenbrust", 250, "g"]]),
+  P("a_haehnchen", "abend", "prot", "Hähnchenbrust · 1 EL Öl", [["haehnchenbrust", 250, "g"], ["rapsoel", 1, "EL"]]),
   P("a_pute", "abend", "prot", "Putenschnitzel", [["putenschnitzel", 250, "g"]]),
   P("a_kabeljau", "abend", "prot", "Kabeljau", [["kabeljau", 250, "g"]]),
   P("a_lachs", "abend", "prot", "Lachs", [["lachs", 250, "g"]]),
-  P("a_gemuese", "abend", "gem", "Frostergemüse", [["frostergemuese", 400, "g"]]),
+  P("a_gemuese", "abend", "gem", "Frostergemüse · 2 EL Öl", [["frostergemuese", 400, "g"], ["rapsoel", 2, "EL"]]),
   P("a_reis", "abend", "beil", "+ Reis", [["reis", "rice", "g"]]),
   P("a_nudeln", "abend", "beil", "+ Vollkornnudeln", [["nudeln", 80, "g"]]),
   P("a_kartoffeln", "abend", "beil", "+ Kartoffeln", [["kartoffeln", 300, "g"]]),
-  P("a_oel", "abend", "extra", "+ Olivenöl", [["olivenoel", 1, "EL"]], true),
+  P("a_oel", "abend", "extra", "+ Rapsöl 1 EL", [["rapsoel", 1, "EL"]], true),
   P("a_hepa_plus", "abend", "extra", "+ Hepafast-Shake", [["hepafast", 1, "Portion"]], true),
-  P("a_hepa", "abend", "base", "Ruhetag schnell: Gemüse · Hepafast", [["frostergemuese", 400, "g"], ["olivenoel", 1, "EL"], ["hepafast", 1, "Portion"]])
+  P("a_hepa", "abend", "base", "Ruhetag schnell: Gemüse · Hepafast", [["frostergemuese", 400, "g"], ["rapsoel", 2, "EL"], ["hepafast", 1, "Portion"]])
 ];
 
 const TYPES = [["train", "Kraft/Bike"], ["gravel", "Gravel"], ["rest", "Ruhetag"]];
@@ -741,7 +743,7 @@ function addPreset(pid){
   p.items.forEach(([fid, q, u]) => {
     const qty = q === "rice" ? RICE[di.phase][di.type] : q;
     if(!qty) return;
-    if(p.merge){
+    if(p.merge || MERGE_FIDS.has(fid)){
       // Baustein ist schon da: Menge erhöhen statt doppelte Zeile
       const ex = dayEntries(curDate).find(e => e.meal === p.meal && e.fid === fid && e.unit === u);
       if(ex){ changeQty(ex.id, String(r1(ex.qty + qty))); return; }
@@ -1050,7 +1052,7 @@ function renderInfo(){
       <tr><td><b>Mittag</b></td><td>250 g Magerquark mit Blaubeeren und Süßstoff (im Lean Bulk + 40 g Haferflocken), dazu 3 Scheiben Aldi- oder 2 Scheiben Lieken-Eiweißbrot mit Buko/Pute · ~60–70 g Protein</td></tr>
       <tr><td><b>Vor dem Training</b></td><td>Banane + 40–50 g Haferflocken, 30–60 Min. vorher</td></tr>
       <tr><td><b>Nach dem Training</b></td><td>Whey-Shake nur, wenn das Abendessen mehr als 2 Std. entfernt ist</td></tr>
-      <tr><td><b>Abend</b></td><td>200–250 g Hähnchenbrust, Kabeljau oder Lachs, 400 g Frostergemüse, 1–1,5 EL Öl, Reis roh: Lean Bulk ${RICE.bulk.train} g an Trainingstagen / ${RICE.bulk.rest} g an Ruhetagen</td></tr>
+      <tr><td><b>Abend</b></td><td>200–250 g Hähnchenbrust, Kabeljau oder Lachs, 400 g Frostergemüse, Rapsöl zum Braten (Gemüse ca. 2 EL, Hähnchen ca. 1 EL ≈ 265 kcal), Reis roh: Lean Bulk ${RICE.bulk.train} g an Trainingstagen / ${RICE.bulk.rest} g an Ruhetagen</td></tr>
       <tr><td><b>Ruhetag schnell</b></td><td>Gemüse + Bodymed-Hepafast-Shake, wenn keine Lust auf Hähnchen</td></tr>
       <tr><td><b>Spät noch Hunger</b></td><td>100–150 g Magerquark mit Sprudelwasser, ½ Hepafast oder 1–2 Eier</td></tr>
     </tbody></table>
