@@ -290,7 +290,7 @@ details.sec[open] > summary::after{content:"－"}
 
 <script>
 "use strict";
-const APP_VERSION = "v15";
+const APP_VERSION = "v16";
 
 /* ======================================================================
    Stammdaten: Lebensmittel (Werte je 100 g bzw. 100 ml), Vorlagen, Ziele
@@ -402,6 +402,7 @@ const PRESETS = [
   P("s_quark", "snack", "base", "Late-Night-Quark 150 g", [["magerquark", 150, "g"]]),
   P("s_hepa", "snack", "base", "Hepafast-Shake", [["hepafast", 1, "Portion"]]),
   P("s_cola", "snack", "base", "Cola Zero 0,5 l", [["colazero", 500, "ml"]]),
+  P("s_latte", "snack", "base", "Latte Macchiato · 260 ml Milch", [["milch15", 260, "ml"]], true), // Kaffee (Robusta) ohne kcal; mehrfaches Tippen addiert 260 ml
   P("s_wein", "snack", "base", "Weißwein 1 Glas", [["weisswein", 1, "Glas 0,2 l"]]),
   P("s_wein_fl", "snack", "base", "Weißwein 1 Flasche", [["grauburgunder", 1, "Flasche"]]),
   // Abend – Bausteine: Eiweiß + Gemüse + Beilage frei kombinieren
