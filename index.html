@@ -290,7 +290,7 @@ details.sec[open] > summary::after{content:"－"}
 
 <script>
 "use strict";
-const APP_VERSION = "v14";
+const APP_VERSION = "v15";
 
 /* ======================================================================
    Stammdaten: Lebensmittel (Werte je 100 g bzw. 100 ml), Vorlagen, Ziele
@@ -319,6 +319,7 @@ const DEFAULT_FOODS = [
   F("ei", "Ei (Gr. M)", "Aufstrich & Belag", "100 g", 137, 12.5, 0.6, 9.5, [["Stück", 60]], [2, "Stück"]),
   F("gurke", "Gurke / Tomate", "Aufstrich & Belag", "100 g", 16, 0.7, 2.4, 0.2, [], [80, "g"]),
   F("butter", "Butter", "Fette", "100 g", 741, 0.7, 0.6, 82, [["TL", 5]], [15, "g"]),
+  F("laetta_extra_fit", "Lätta Extra Fit (28 % Fett)", "Fette", "100 g", 269, 0.5, 3.9, 28, [["Scheibe dünn", 5]], [15, "g"], "Packungsangabe: 269 kcal, 28 g Fett je 100 g. Dünn gestrichen ≈ 5 g pro Brotscheibe."),
   F("magerquark", "Magerquark", "Milchprodukte & Shakes", "100 g", 67, 13, 3.8, 0.2, [["Becher", 250]], [250, "g"], "Mit Sprudelwasser cremig rühren."),
   F("skyr", "Skyr natur", "Milchprodukte & Shakes", "100 g", 63, 11, 4, 0.2, [["Becher", 450]], [250, "g"]),
   F("milch15", "Milch 1,5 %", "Milchprodukte & Shakes", "100 ml", 47, 3.4, 4.9, 1.5, [["Glas", 200]], [300, "ml"]),
@@ -377,8 +378,8 @@ const PRESETS = [
   P("f_butter", "fruehstueck", "extra", "+ Butter", [["butter", 10, "g"]], true),
   // Mittag – Basis
   P("m_quark", "mittag", "base", "Magerquark 250 g", [["magerquark", 250, "g"]]),
-  P("m_aldi", "mittag", "base", "3 Aldi-Eiweißbrot", [["aldi_eiweissbrot", 3, "Scheibe"]]),
-  P("m_lieken", "mittag", "base", "2 Lieken-Eiweißbrot", [["lieken_eiweissbrot", 2, "Scheibe"]]),
+  P("m_aldi", "mittag", "base", "3 Aldi-Eiweißbrot · Lätta", [["aldi_eiweissbrot", 3, "Scheibe"], ["laetta_extra_fit", 15, "g"]]),
+  P("m_lieken", "mittag", "base", "2 Lieken-Eiweißbrot · Lätta", [["lieken_eiweissbrot", 2, "Scheibe"], ["laetta_extra_fit", 10, "g"]]),
   // Mittag – zum Quark
   P("m_blau", "mittag", "plus", "+ Blaubeeren", [["blaubeeren", 100, "g"]], true),
   P("m_hafer", "mittag", "plus", "+ Haferflocken", [["haferflocken", 40, "g"]], true),
@@ -1050,7 +1051,7 @@ function renderInfo(){
     <table class="tbl"><tbody>
       <tr><td><b>Frühstück</b><br><span class="sub">So–Fr</span></td><td>2 Eiweißbrötchen, 200 g körniger Frischkäse (0,9 %), Belag (Schinken, Putenbrust, Hähnchenbrust) · ~55–60 g Protein</td></tr>
       <tr><td><b>Frühstück</b><br><span class="sub">Samstag</span></td><td>2 Mehrkornbrötchen vom Bäcker mit Butter und Aufschnitt, optional 2 Spiegeleier</td></tr>
-      <tr><td><b>Mittag</b></td><td>250 g Magerquark mit Blaubeeren und Süßstoff (im Lean Bulk + 40 g Haferflocken), dazu 3 Scheiben Aldi- oder 2 Scheiben Lieken-Eiweißbrot mit Buko/Pute · ~60–70 g Protein</td></tr>
+      <tr><td><b>Mittag</b></td><td>250 g Magerquark mit Blaubeeren und Süßstoff (im Lean Bulk + 40 g Haferflocken), dazu 3 Scheiben Aldi- oder 2 Scheiben Lieken-Eiweißbrot, hauchdünn Lätta Extra Fit (~5 g pro Scheibe), mit Buko/Pute · ~60–70 g Protein</td></tr>
       <tr><td><b>Vor dem Training</b></td><td>Banane + 40–50 g Haferflocken, 30–60 Min. vorher</td></tr>
       <tr><td><b>Nach dem Training</b></td><td>Whey-Shake nur, wenn das Abendessen mehr als 2 Std. entfernt ist</td></tr>
       <tr><td><b>Abend</b></td><td>200–250 g Hähnchenbrust, Kabeljau oder Lachs, 400 g Frostergemüse, Rapsöl zum Braten (Gemüse ca. 2 EL, Fleisch/Fisch ca. 1 EL ≈ 265 kcal), Reis roh: Lean Bulk ${RICE.bulk.train} g an Trainingstagen / ${RICE.bulk.rest} g an Ruhetagen</td></tr>

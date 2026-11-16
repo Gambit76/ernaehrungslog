@@ -50,3 +50,4 @@ Im Repo liegen **keine Daten, keine URL und kein Schlüssel**, nur die App-Oberf
 - **v12** – Neues Lebensmittel „Rapsöl (zum Braten)“. Abend-Chips „Frostergemüse“ und „Hähnchenbrust“ tragen das Bratöl gleich mit ein (2 EL bzw. 1 EL, Öl-Zeilen summieren sich zu einer Zeile); „+ Rapsöl 1 EL“ ersetzt „+ Olivenöl“; Chip „Ruhetag schnell“ mit 2 EL Rapsöl. sw.js wiederhergestellt (war seit v6 leer)
 - **v13** – Auch „Putenschnitzel“, „Kabeljau“ und „Lachs“ tragen 1 EL Rapsöl mit ein (wie Hähnchen); Garanleitungen auf 1 EL Rapsöl angepasst
 - **v14** – Neuer Chip „Gemüse ohne Öl (z. B. Sommergemüse)“ für Frostergemüse, das ohne Bratöl mit etwas Wasser gegart wird
+- **v15** – Neues Lebensmittel „Lätta Extra Fit (28 % Fett)“ (269 kcal/100 g). Die Mittags-Brot-Chips tragen es mit ein: 3 Aldi-Eiweißbrot + 15 g, 2 Lieken-Eiweißbrot + 10 g (≈ 5 g pro Scheibe, in der Liste änderbar)
