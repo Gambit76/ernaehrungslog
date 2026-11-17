@@ -56,3 +56,4 @@ Im Repo liegen **keine Daten, keine URL und kein Schlüssel**, nur die App-Oberf
 - **v18** – Zwei neue Snack-Chips für den Whey-Shake Schoko: ganz (1 Scoop = 30 g + 300 ml Milch) und halb (15 g + 150 ml). Dafür neues Lebensmittel „Milch 1,8 % (Halbfett)“ (49 kcal/100 ml)
 - **v19** – Alter Chip „Whey-Shake mit Milch“ (Milch 1,5 %) entfernt; es bleiben die beiden Whey-Shake-Chips ganz und halb mit Milch 1,8 %
 - **v20** – Ei gibt es jetzt in den Größen M („Stück“, 60 g), L (70 g) und XL (80 g), die Größe wählst du beim Hinzufügen bei der Einheit. Neuer Abend-Chip „Ei (Gr. L)“ unter Eiweiß, mehrfaches Tippen addiert Eier (ohne Öl)
+- **v21** – Mengen per Auswahlwalze (iOS-Stil) statt Tippen: beim Hinzufügen und per Tipp auf die Menge in der Liste. Schritte je Einheit: g 5 g bis 100 g, danach 10 g; ml 10 ml; Stück, Scheibe, Portion, EL usw. 0,5; Eier-Größen 1; Flasche 0,25. Über „Zahl eintippen“ geht jede beliebige Menge, Werte außerhalb des Rasters bleiben erhalten
