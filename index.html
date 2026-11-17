@@ -290,7 +290,7 @@ details.sec[open] > summary::after{content:"－"}
 
 <script>
 "use strict";
-const APP_VERSION = "v16";
+const APP_VERSION = "v17";
 
 /* ======================================================================
    Stammdaten: Lebensmittel (Werte je 100 g bzw. 100 ml), Vorlagen, Ziele
@@ -709,7 +709,7 @@ function renderEntry(){
         const ps = PRESETS.filter(p => p.meal === mk && p.grp === gk);
         const copy = gk === GROUPS[mk][0][0] && lastD ? `<button class="chipbtn last" type="button" data-copy="${mk}" data-from="${lastD}">Wie Vortag</button>` : "";
         if(!ps.length && !copy) return "";
-        return `<div class="chipgrp">${gl ? `<span class="gl">${esc(gl)}</span>` : ""}<div class="chips wrap">${ps.map(p => `<button class="chipbtn${p.merge ? " plus" : ""}" type="button" data-preset="${p.id}">${esc(p.label)}</button>`).join("")}${copy}</div></div>`;
+        return `<div class="chipgrp">${gl ? `<span class="gl">${esc(gl)}</span>` : ""}<div class="chips wrap">${ps.map(p => `<button class="chipbtn${p.merge && p.label.startsWith("+") ? " plus" : ""}" type="button" data-preset="${p.id}">${esc(p.label)}</button>`).join("")}${copy}</div></div>`;
       }).join("")}
       ${items.length ? `<div class="items">${items.map(itemHTML).join("")}</div>` : ""}
       <div class="meal-actions">

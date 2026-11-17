@@ -52,3 +52,4 @@ Im Repo liegen **keine Daten, keine URL und kein Schlüssel**, nur die App-Oberf
 - **v14** – Neuer Chip „Gemüse ohne Öl (z. B. Sommergemüse)“ für Frostergemüse, das ohne Bratöl mit etwas Wasser gegart wird
 - **v15** – Neues Lebensmittel „Lätta Extra Fit (28 % Fett)“ (269 kcal/100 g). Die Mittags-Brot-Chips tragen es mit ein: 3 Aldi-Eiweißbrot + 15 g, 2 Lieken-Eiweißbrot + 10 g (≈ 5 g pro Scheibe, in der Liste änderbar)
 - **v16** – Neuer Snack-Chip „Latte Macchiato · 260 ml Milch“ (Milch 1,5 %, Kaffee zählt nicht); jedes Tippen addiert 260 ml zur Milch-Zeile
+- **v17** – Grüne Hinterlegung nur noch bei „+“-Chips (Zusatz zur Mahlzeit); Ei und Latte Macchiato bleiben mehrfach addierbar, aber neutral gefärbt
