@@ -290,7 +290,7 @@ details.sec[open] > summary::after{content:"－"}
 
 <script>
 "use strict";
-const APP_VERSION = "v17";
+const APP_VERSION = "v18";
 
 /* ======================================================================
    Stammdaten: Lebensmittel (Werte je 100 g bzw. 100 ml), Vorlagen, Ziele
@@ -323,6 +323,7 @@ const DEFAULT_FOODS = [
   F("magerquark", "Magerquark", "Milchprodukte & Shakes", "100 g", 67, 13, 3.8, 0.2, [["Becher", 250]], [250, "g"], "Mit Sprudelwasser cremig rühren."),
   F("skyr", "Skyr natur", "Milchprodukte & Shakes", "100 g", 63, 11, 4, 0.2, [["Becher", 450]], [250, "g"]),
   F("milch15", "Milch 1,5 %", "Milchprodukte & Shakes", "100 ml", 47, 3.4, 4.9, 1.5, [["Glas", 200]], [300, "ml"]),
+  F("milch18", "Milch 1,8 % (Halbfett)", "Milchprodukte & Shakes", "100 ml", 49, 3.4, 4.9, 1.8, [["Glas", 200]], [300, "ml"]),
   F("whey", "All Stars Whey Schoko (Pulver)", "Milchprodukte & Shakes", "100 g", 380, 75, 7, 6, [["Scoop", 30]], [1, "Scoop"], "Schätzwert, mit Dose abgleichen."),
   F("hepafast", "Bodymed Hepafast Vanille (Pulver)", "Milchprodukte & Shakes", "100 g", 360, 38, 30, 6, [["Portion", 33]], [1, "Portion"], "Schätzwert, mit Packung abgleichen."),
   F("blaubeeren", "Blaubeeren (TK)", "Obst, Nüsse & Getreide", "100 g", 57, 0.7, 12, 0.3, [["Handvoll", 60]], [100, "g"]),
@@ -397,6 +398,8 @@ const PRESETS = [
   P("s_ei", "snack", "base", "Ei", [["ei", 1, "Stück"]], true),
   P("s_pre", "snack", "base", "Pre-Workout: Banane · Hafer", [["banane", 1, "Stück"], ["haferflocken", 40, "g"], ["milch15", 150, "ml"]]),
   P("s_shake", "snack", "base", "Whey-Shake mit Milch", [["whey", 1, "Scoop"], ["milch15", 300, "ml"]]),
+  P("s_shake_ganz", "snack", "base", "Whey-Shake ganz (30 g · 300 ml)", [["whey", 1, "Scoop"], ["milch18", 300, "ml"]]),
+  P("s_shake_halb", "snack", "base", "Whey-Shake halb (15 g · 150 ml)", [["whey", 0.5, "Scoop"], ["milch18", 150, "ml"]]),
   P("s_banane", "snack", "base", "Banane", [["banane", 1, "Stück"]]),
   P("s_nuss", "snack", "base", "Walnüsse 30 g", [["walnuesse", 30, "g"]]),
   P("s_quark", "snack", "base", "Late-Night-Quark 150 g", [["magerquark", 150, "g"]]),
