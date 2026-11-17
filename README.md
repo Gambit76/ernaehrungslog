@@ -54,3 +54,4 @@ Im Repo liegen **keine Daten, keine URL und kein Schlüssel**, nur die App-Oberf
 - **v16** – Neuer Snack-Chip „Latte Macchiato · 260 ml Milch“ (Milch 1,5 %, Kaffee zählt nicht); jedes Tippen addiert 260 ml zur Milch-Zeile
 - **v17** – Grüne Hinterlegung nur noch bei „+“-Chips (Zusatz zur Mahlzeit); Ei und Latte Macchiato bleiben mehrfach addierbar, aber neutral gefärbt
 - **v18** – Zwei neue Snack-Chips für den Whey-Shake Schoko: ganz (1 Scoop = 30 g + 300 ml Milch) und halb (15 g + 150 ml). Dafür neues Lebensmittel „Milch 1,8 % (Halbfett)“ (49 kcal/100 ml)
+- **v19** – Alter Chip „Whey-Shake mit Milch“ (Milch 1,5 %) entfernt; es bleiben die beiden Whey-Shake-Chips ganz und halb mit Milch 1,8 %
