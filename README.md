@@ -13,7 +13,7 @@ Im Repo liegen **keine Daten, keine URL und kein Schlüssel**, nur die App-Oberf
 | `index.html` | Die komplette App (Oberfläche, Lebensmittel-Werte, Vorlagen, Ziele) | GitHub Pages |
 | `sw.js` | Offline-Cache. **Bei jeder Änderung `VERSION` hochzählen** | GitHub Pages |
 | `manifest.webmanifest`, `icons/` | Name und Icon auf dem Home-Bildschirm | GitHub Pages |
-| `apps-script/Api.gs` | Schnittstelle zum Sheet (Lesen/Schreiben) | Apps Script im Sheet „Ernährungslog“ |
+| `apps-script/info.txt` | Verweis: `Api.gs` liegt im privaten Repo `Gambit76/apps-script` (Ordner `ernaehrungslog/`) | Apps Script im Sheet „Ernährungslog“ |
 | `docs/Einrichtung.md` | Ersteinrichtung Schritt für Schritt | – |
 | `docs/APP-STANDARD.md` | Gemeinsamer Design- und Technik-Standard der drei Apps (hell/dunkel, Einstellungen, Versionen) | – |
 
@@ -38,7 +38,7 @@ Im Repo liegen **keine Daten, keine URL und kein Schlüssel**, nur die App-Oberf
 2. In `sw.js` die Zeile `const VERSION = "ernaehrungslog-vN"` um eins erhöhen, in `index.html` `APP_VERSION` ebenso.
 3. Committen und pushen. Nach 1–2 Minuten ist die neue Version online. App auf dem iPhone **zweimal** öffnen.
 
-**Änderungen an `apps-script/Api.gs`** landen nicht automatisch im Sheet: Inhalt im Apps-Script-Editor einfügen, speichern, dann **Bereitstellen → Bereitstellungen verwalten → Bearbeiten → Version: Neue Version → Bereitstellen** (URL bleibt gleich).
+**Änderungen an `Api.gs` (privates Repo `Gambit76/apps-script`)** landen nicht automatisch im Sheet: Inhalt im Apps-Script-Editor einfügen, speichern, dann **Bereitstellen → Bereitstellungen verwalten → Bearbeiten → Version: Neue Version → Bereitstellen** (URL bleibt gleich).
 
 ## Versionen
 

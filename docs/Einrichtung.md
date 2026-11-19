@@ -15,7 +15,7 @@ Dauer: ca. 10 Minuten, einmalig. Schritte 1–2 am Rechner, Schritt 3 am iPhone.
 ## 1. Schnittstelle im Sheet anlegen
 
 1. Sheet **Ernährungslog** öffnen → **Erweiterungen → Apps Script**.
-2. Im Editor den Inhalt von `Code.gs` komplett löschen und den Inhalt von [`apps-script/Api.gs`](../apps-script/Api.gs) einfügen (auf GitHub: Datei öffnen → „Copy raw file“). Speichern (⌘S). Projektname oben z. B. „Ernährungslog API“.
+2. Im Editor den Inhalt von `Code.gs` komplett löschen und den Inhalt von `Api.gs` aus dem privaten Repo `Gambit76/apps-script` (Ordner `ernaehrungslog/`) einfügen (auf GitHub: Datei öffnen → „Copy raw file“). Speichern (⌘S). Projektname oben z. B. „Ernährungslog API“.
 3. In der Funktionsauswahl oben **`setupKey`** wählen → **Ausführen**.
 4. Berechtigungen: **Berechtigungen prüfen** → dein Konto → bei „Google hat diese App nicht überprüft“ **Erweitert → Zu … wechseln (unsicher) → Zulassen**. Das ist bei eigenen Scripts normal.
 5. Im **Ausführungsprotokoll** steht `Dein App-Schlüssel: …` → kopieren.
