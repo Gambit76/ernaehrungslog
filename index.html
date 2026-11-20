@@ -300,7 +300,7 @@ details.sec[open] > summary::after{content:"－"}
 
 <script>
 "use strict";
-const APP_VERSION = "v23";
+const APP_VERSION = "v24";
 
 /* ======================================================================
    Stammdaten: Lebensmittel (Werte je 100 g bzw. 100 ml), Vorlagen, Ziele
@@ -348,6 +348,7 @@ const DEFAULT_FOODS = [
   F("kabeljau", "Kabeljaufilet (roh)", "Fleisch & Fisch", "100 g", 77, 18, 0, 0.6, [], [250, "g"]),
   F("lachs", "Lachsfilet (roh)", "Fleisch & Fisch", "100 g", 200, 20, 0, 13, [["Filet", 125]], [250, "g"]),
   F("frostergemuese", "Frostergemüse (ohne Sauce)", "Beilagen & Gemüse", "100 g", 35, 2, 5, 0.3, [["Beutel", 450]], [400, "g"]),
+  F("frosta_italiana", "Frosta Gemüse Pfanne all'Italiana", "Beilagen & Gemüse", "100 g", 48, 1.4, 4.1, 2.4, [["Beutel", 480]], [480, "g"]),
   F("reis", "Basmati-Vollkornreis (roh)", "Beilagen & Gemüse", "100 g", 350, 8, 74, 2.5, [], [80, "g"], "Rohgewicht."),
   F("nudeln", "Vollkornnudeln (roh)", "Beilagen & Gemüse", "100 g", 350, 13, 64, 2.5, [], [100, "g"], "Rohgewicht."),
   F("suesskartoffel", "Süßkartoffel", "Beilagen & Gemüse", "100 g", 86, 1.6, 20, 0.1, [], [250, "g"]),
@@ -425,6 +426,7 @@ const PRESETS = [
   P("a_kabeljau", "abend", "prot", "Kabeljau · 1 EL Öl", [["kabeljau", 250, "g"], ["rapsoel", 1, "EL"]]),
   P("a_lachs", "abend", "prot", "Lachs · 1 EL Öl", [["lachs", 250, "g"], ["rapsoel", 1, "EL"]]),
   P("a_gemuese", "abend", "gem", "Frostergemüse · 2 EL Öl", [["frostergemuese", 400, "g"], ["rapsoel", 2, "EL"]]),
+  P("a_gemuese_italiana", "abend", "gem", "Gemüse Pfanne all'Italiana · 2 EL Öl", [["frosta_italiana", 480, "g"], ["rapsoel", 2, "EL"]]),
   P("a_gemuese_pur", "abend", "gem", "Gemüse ohne Öl (z. B. Sommergemüse)", [["frostergemuese", 400, "g"]]),
   P("a_reis", "abend", "beil", "+ Reis", [["reis", "rice", "g"]]),
   P("a_nudeln", "abend", "beil", "+ Vollkornnudeln", [["nudeln", 80, "g"]]),
