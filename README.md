@@ -64,3 +64,4 @@ Im Repo liegen **keine Daten, keine URL und kein Schlüssel**, nur die App-Oberf
 - **v26** – Neues Lebensmittel „Rührei (Eier, Milch, Schnittlauch)“: Menge = Anzahl Eier, Größe M/L/XL über die Einheit (wie beim Ei). Pro Ei sind 7,5 ml Milch 1,8 % eingerechnet (1 EL auf 2 Eier), Schnittlauch zählt nicht, Bratfett separat (≈ 127 kcal, 11,5 g Protein, 1,1 g KH, 8,6 g Fett je 100 g)
 - **v27** – Neues Lebensmittel „Emmer-Dinkel-Vollkornbrot“ unter Brot & Brötchen (Richtwerte geschätzt: 240 kcal, 9,5 g Protein, 41 g KH, 2 g Fett je 100 g). Einheiten: Gramm oder Scheibe dünn (35 g), Scheibe (50 g), Scheibe dick (70 g)
 - **v28** – Emmer-Dinkel-Vollkornbrot: Scheiben an das runde Brot angepasst, Scheibe (Mitte) = 55 g gewogen, Scheibe Rand = 35 g geschätzt; „dünn“, „dick“ entfallen
+- **v30** – Neuer Snack-Chip „Haferflocken · Milch 1,8 %“ (50 g Haferflocken, 150 ml Milch 1,8 %), Mengen nach dem Hinzufügen in der Liste änderbar
