@@ -1,5 +1,5 @@
 // Offline-Cache für die App-Hülle. Bei Änderungen an der App VERSION hochzählen.
-const VERSION = "ernaehrungslog-v30";
+const VERSION = "ernaehrungslog-v31";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/apple-touch-icon.png"];
 
 self.addEventListener("install", (e) => {

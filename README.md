@@ -65,3 +65,4 @@ Im Repo liegen **keine Daten, keine URL und kein Schlüssel**, nur die App-Oberf
 - **v27** – Neues Lebensmittel „Emmer-Dinkel-Vollkornbrot“ unter Brot & Brötchen (Richtwerte geschätzt: 240 kcal, 9,5 g Protein, 41 g KH, 2 g Fett je 100 g). Einheiten: Gramm oder Scheibe dünn (35 g), Scheibe (50 g), Scheibe dick (70 g)
 - **v28** – Emmer-Dinkel-Vollkornbrot: Scheiben an das runde Brot angepasst, Scheibe (Mitte) = 55 g gewogen, Scheibe Rand = 35 g geschätzt; „dünn“, „dick“ entfallen
 - **v30** – Neuer Snack-Chip „Haferflocken · Milch 1,8 %“ (50 g Haferflocken, 150 ml Milch 1,8 %), Mengen nach dem Hinzufügen in der Liste änderbar
+- **v31** – Neues Lebensmittel „Frosta Gemüse Pfanne Sommer Garten“ (61 kcal, 1,7 g Protein, 5,2 g KH, 3,0 g Fett je 100 g; Beutel = 480 g). Der Abend-Chip „Gemüse ohne Öl (z. B. Sommergemüse)“ ist ersetzt durch „Gemüse Pfanne Sommer Garten (ohne Öl)“ (480 g, kein Rapsöl)
