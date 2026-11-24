@@ -300,7 +300,7 @@ details.sec[open] > summary::after{content:"－"}
 
 <script>
 "use strict";
-const APP_VERSION = "v31";
+const APP_VERSION = "v32";
 
 /* ======================================================================
    Stammdaten: Lebensmittel (Werte je 100 g bzw. 100 ml), Vorlagen, Ziele
@@ -311,7 +311,7 @@ const APP_VERSION = "v31";
 const CATS = ["Brot & Brötchen", "Aufstrich & Belag", "Milchprodukte & Shakes", "Obst, Nüsse & Getreide", "Fleisch & Fisch", "Beilagen & Gemüse", "Fette", "Getränke", "Eigene"];
 const F = (id, name, cat, per, kcal, p, c, f, units, def, note) => ({id, name, cat, per, kcal, p, c, f, units: units || [], def, note: note || ""});
 const DEFAULT_FOODS = [
-  F("eiweissbroetchen", "Eiweißbrötchen", "Brot & Brötchen", "100 g", 283, 21.1, 25.1, 11.5, [["Stück", 75]], [2, "Stück"], "75 g/Stück ≈ 15,8 g Protein (Aldi/Lidl)."),
+  F("eiweissbroetchen", "Eiweißbrötchen (Sinnack)", "Brot & Brötchen", "100 g", 275, 21, 25, 8.6, [["Stück", 75]], [2, "Stück"], "Sinnack Protein Brötchen (zum Fertigbacken), Werte laut Packung/REWE. 75 g/Stück ≈ 15,8 g Protein."),
   F("aldi_eiweissbrot", "Aldi Eiweißbrot", "Brot & Brötchen", "100 g", 266, 24, 8, 13, [["Scheibe", 35]], [3, "Scheibe"], "Kleine Scheiben à 35 g. Schätzwert, mit Packung abgleichen."),
   F("lieken_eiweissbrot", "Lieken Urkorn / Harry Eiweißbrot", "Brot & Brötchen", "100 g", 243, 23.1, 14, 10.5, [["Scheibe", 42]], [2, "Scheibe"], "2 Scheiben (84 g) ≈ 19,4 g Protein."),
   F("normales_brot", "Brot (Vollkorn/Mischbrot, normal)", "Brot & Brötchen", "100 g", 230, 8, 43, 1.5, [["Scheibe", 45]], [1, "Scheibe"], "Schätzwert für normales Vollkorn-/Mischbrot, Scheibe ≈ 45 g. Mit Packung abgleichen."),
