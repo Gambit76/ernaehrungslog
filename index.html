@@ -300,7 +300,7 @@ details.sec[open] > summary::after{content:"－"}
 
 <script>
 "use strict";
-const APP_VERSION = "v32";
+const APP_VERSION = "v33";
 
 /* ======================================================================
    Stammdaten: Lebensmittel (Werte je 100 g bzw. 100 ml), Vorlagen, Ziele
@@ -357,6 +357,11 @@ const DEFAULT_FOODS = [
   F("nudeln", "Vollkornnudeln (roh)", "Beilagen & Gemüse", "100 g", 350, 13, 64, 2.5, [], [100, "g"], "Rohgewicht."),
   F("suesskartoffel", "Süßkartoffel", "Beilagen & Gemüse", "100 g", 86, 1.6, 20, 0.1, [], [250, "g"]),
   F("kartoffeln", "Kartoffeln (roh)", "Beilagen & Gemüse", "100 g", 77, 2, 17, 0.1, [], [300, "g"], "Rohgewicht. 300 g ≈ 70 g Reis (roh)."),
+  F("weissbrot", "Ciabatta-/Baguette-Weißbrot (geschätzt)", "Brot & Brötchen", "100 g", 237.5, 7.9, 45.8, 2.5, [["Scheibe", 40]], [3, "Scheibe"], "Büro-Mittag. Scheibe ≈ 40 g, Werte geschätzt (typisches Ciabatta/Baguette)."),
+  F("salat_gemischt", "Gemischter Salat mit Mais, Gurke, Karotte, Radicchio (geschätzt)", "Beilagen & Gemüse", "100 g", 28, 1.4, 5.2, 0.4, [["Schale", 250]], [1, "Schale"], "Salatschale aus dem Büro, ohne Dressing, Ei und Thunfisch. Schale ≈ 250 g, geschätzt."),
+  F("thunfisch", "Thunfisch (geschätzt, abgetropft)", "Fleisch & Fisch", "100 g", 110, 24.4, 0, 1, [["Dose", 112]], [80, "g"], "Thunfisch im eigenen Saft, abgetropft. Schätzwert."),
+  F("kuerbiskerne", "Kürbiskerne", "Obst, Nüsse & Getreide", "100 g", 560, 25, 5, 47.5, [["EL", 10]], [8, "g"], "Als Topping auf dem Salat."),
+  F("dressing_balsamico", "Balsamico-Dressing (geschätzt)", "Fette", "100 g", 333, 0.7, 13.3, 30, [["EL", 15]], [2, "EL"], "Fertig-Dressing aus dem Büro, 1 EL ≈ 15 g. Schätzwert."),
   F("rapsoel", "Rapsöl (zum Braten)", "Fette", "100 g", 884, 0, 0, 100, [["EL", 10], ["TL", 4.5]], [1, "EL"], "1 EL ≈ 10 g ≈ 88 kcal. Gemüse ca. 2 EL, Eiweiß (Fleisch/Fisch) ca. 1 EL."),
   F("olivenoel", "Olivenöl", "Fette", "100 g", 884, 0, 0, 100, [["EL", 10], ["TL", 4.5]], [1, "EL"]),
   F("weisswein", "Weißwein trocken", "Getränke", "100 ml", 72, 0.1, 0.6, 0, [["Glas 0,2 l", 200], ["Flasche", 750]], [1, "Glas 0,2 l"], "Alkohol: Proteinsynthese bis −37 %, Schlaf leidet."),
@@ -397,6 +402,7 @@ const PRESETS = [
   P("m_quark", "mittag", "base", "Magerquark 250 g", [["magerquark", 250, "g"]]),
   P("m_aldi", "mittag", "base", "3 Aldi-Eiweißbrot · Lätta", [["aldi_eiweissbrot", 3, "Scheibe"], ["laetta_extra_fit", 15, "g"]]),
   P("m_lieken", "mittag", "base", "2 Lieken-Eiweißbrot · Lätta", [["lieken_eiweissbrot", 2, "Scheibe"], ["laetta_extra_fit", 10, "g"]]),
+  P("m_salat", "mittag", "base", "Büro: Salatbowl · 3 Weißbrot · Ei · Thunfisch", [["weissbrot", 3, "Scheibe"], ["salat_gemischt", 1, "Schale"], ["ei", 1, "Stück"], ["thunfisch", 80, "g"], ["kuerbiskerne", 8, "g"], ["dressing_balsamico", 2, "EL"]]),
   // Mittag – zum Quark
   P("m_blau", "mittag", "plus", "+ Blaubeeren", [["blaubeeren", 100, "g"]], true),
   P("m_hafer", "mittag", "plus", "+ Haferflocken", [["haferflocken", 40, "g"]], true),
