@@ -67,3 +67,4 @@ Im Repo liegen **keine Daten, keine URL und kein Schlüssel**, nur die App-Oberf
 - **v30** – Neuer Snack-Chip „Haferflocken · Milch 1,8 %“ (50 g Haferflocken, 150 ml Milch 1,8 %), Mengen nach dem Hinzufügen in der Liste änderbar
 - **v31** – Neues Lebensmittel „Frosta Gemüse Pfanne Sommer Garten“ (61 kcal, 1,7 g Protein, 5,2 g KH, 3,0 g Fett je 100 g; Beutel = 480 g). Der Abend-Chip „Gemüse ohne Öl (z. B. Sommergemüse)“ ist ersetzt durch „Gemüse Pfanne Sommer Garten (ohne Öl)“ (480 g, kein Rapsöl)
 - **v32** – „Eiweißbrötchen“ auf Sinnack Protein Brötchen umgestellt (275 kcal, 21 g Protein, 25 g KH, 8,6 g Fett je 100 g; Stück = 75 g), Fettwert korrigiert
+- **v34** – Latte-Macchiato-Chip korrigiert: Glas 260 ml, davon 80 % Milch, also 208 ml Milch 1,5 % statt 260 ml (Chip heißt jetzt „Latte Macchiato · 260 ml (80 % Milch)“, jedes Tippen addiert 208 ml)
